@@ -1,0 +1,7 @@
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 9 files:  11%|#1        | 1/9 [00:00<00:01,  4.40it/s]Fetching 9 files:  33%|###3      | 3/9 [00:00<00:00,  9.79it/s]Fetching 9 files:  67%|######6   | 6/9 [00:00<00:00, 15.49it/s]Fetching 9 files:  89%|########8 | 8/9 [00:20<00:00, 15.49it/s]Fetching 9 files: 100%|##########| 9/9 [00:36<00:00,  5.57s/it]Fetching 9 files: 100%|##########| 9/9 [00:36<00:00,  4.00s/it]
+ok Qwen2.5-1.5B
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Fetching 9 files:  11%|#1        | 1/9 [00:00<00:01,  5.33it/s]Fetching 9 files:  56%|#####5    | 5/9 [00:00<00:00, 18.73it/s]Fetching 9 files:  89%|########8 | 8/9 [00:00<00:00, 19.35it/s]Fetching 9 files:  89%|########8 | 8/9 [00:13<00:00, 19.35it/s]Fetching 9 files: 100%|##########| 9/9 [00:35<00:00,  6.49s/it]Fetching 9 files: 100%|##########| 9/9 [00:35<00:00,  3.92s/it]
+ok Qwen2.5-1.5B-Instruct
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Fetching 9 files:  11%|#1        | 1/9 [00:00<00:01,  4.15it/s]Fetching 9 files:  67%|######6   | 6/9 [00:00<00:00, 20.72it/s]Fetching 9 files:  89%|########8 | 8/9 [00:18<00:00, 20.72it/s]Fetching 9 files: 100%|##########| 9/9 [00:35<00:00,  4.99s/it]Fetching 9 files: 100%|##########| 9/9 [00:35<00:00,  3.90s/it]
+ok Qwen2.5-Coder-1.5B

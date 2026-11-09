@@ -1,0 +1,23 @@
+{
+ "name": "D",
+ "recipe": {
+  "receiver": "models_cache/Qwen2.5-Coder-1.5B",
+  "transfer": "identity",
+  "alpha": 0.0,
+  "donor": null,
+  "base": null,
+  "patched_tensors": []
+ },
+ "applied_patch_norm_after_transfer": 0.0,
+ "seconds": 16.6,
+ "memory": {
+  "device": "NVIDIA GeForce RTX 3060 Ti",
+  "vram_total_gb": 8.0,
+  "vram_free_gb": 1.12,
+  "allocated_gb": 2.88,
+  "peak_allocated_gb": 3.75
+ },
+ "dtypes": {
+  "torch.bfloat16": 1543714304
+ }
+}

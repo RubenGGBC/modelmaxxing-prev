@@ -1,0 +1,23 @@
+{
+ "name": "RB_05",
+ "recipe": {
+  "receiver": "models_cache/Qwen2.5-1.5B-Instruct",
+  "transfer": "interpolate",
+  "alpha": 0.5,
+  "donor": "models_cache/Qwen2.5-1.5B",
+  "base": null,
+  "patched_tensors": []
+ },
+ "applied_patch_norm_after_transfer": 0.0,
+ "seconds": 16.4,
+ "memory": {
+  "device": "NVIDIA GeForce RTX 3060 Ti",
+  "vram_total_gb": 8.0,
+  "vram_free_gb": 1.22,
+  "allocated_gb": 2.88,
+  "peak_allocated_gb": 3.75
+ },
+ "dtypes": {
+  "torch.bfloat16": 1543714304
+ }
+}
