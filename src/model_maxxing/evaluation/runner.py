@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -35,8 +36,63 @@ def _sandbox_cmd(d: str, f: Path, timeout: int, name: str) -> list[str]:
     raise RuntimeError("Sin sandbox (sandbox-exec/docker): no se ejecuta código generado")
 
 
+def _limits(timeout: int):
+    """Límites POSIX del subproceso: memoria 1 GB, CPU, tamaño de fichero, sin core dumps."""
+    import resource
+
+    def f():
+        os.setsid()
+        resource.setrlimit(resource.RLIMIT_AS, (1 << 30, 1 << 30))
+        resource.setrlimit(resource.RLIMIT_CPU, (timeout + 1, timeout + 1))
+        resource.setrlimit(resource.RLIMIT_FSIZE, (10 << 20, 10 << 20))
+        resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    return f
+
+
+_UNSHARE: bool | None = None
+
+
+def _can_unshare_net() -> bool:
+    """¿Podemos aislar la red con `unshare -n` (requiere root, p. ej. en Kaggle/Colab)?"""
+    global _UNSHARE
+    if _UNSHARE is None:
+        try:
+            _UNSHARE = shutil.which("unshare") is not None and subprocess.run(
+                ["unshare", "-n", "true"], capture_output=True, timeout=10).returncode == 0
+        except Exception:
+            _UNSHARE = False
+    return _UNSHARE
+
+
+def _run_subprocess_sandbox(d: str, f: Path, timeout: int) -> tuple[bool, str]:
+    """Modo MM_SANDBOX=subprocess, SOLO para VMs desechables Linux (Kaggle/Colab) sin Docker:
+    subproceso con límites de recursos, directorio temporal, entorno vacío y red cortada si es posible."""
+    if os.name != "posix":
+        raise RuntimeError("MM_SANDBOX=subprocess solo está soportado en Linux")
+    cmd = (["unshare", "-n"] if _can_unshare_net() else []) + [sys.executable, "-I", str(f)]
+    try:
+        p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout,
+                           cwd=d, env={"PATH": "/usr/bin:/bin", "HOME": d}, preexec_fn=_limits(timeout))
+    except subprocess.TimeoutExpired:
+        return False, "timeout"
+    if p.returncode in (-9, -24, 137):     # SIGKILL / SIGXCPU por límite de CPU
+        return False, "timeout"
+    return p.returncode == 0, p.stderr[-300:]
+
+
+def sandbox_description() -> str:
+    if os.environ.get("MM_SANDBOX") == "subprocess":
+        return f"subprocess(rlimits, unshare_net={_can_unshare_net()})"
+    return "sandbox-exec" if shutil.which("sandbox-exec") else "docker" if shutil.which("docker") else "none"
+
+
 def run_tests(code: str, ex: dict, timeout: int = 10) -> tuple[bool, str]:
     program = "\n".join(ex.get("test_imports", [])) + "\n" + code + "\n\n" + "\n".join(ex["test_list"]) + "\n"
+    if os.environ.get("MM_SANDBOX") == "subprocess":
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "t.py"
+            f.write_text(program, encoding="utf-8")
+            return _run_subprocess_sandbox(d, f, timeout)
     with tempfile.TemporaryDirectory() as d:
         f = Path(d) / "t.py"
         f.write_text(program, encoding="utf-8")
@@ -80,6 +136,48 @@ def evaluate_mbpp_model(model, tok, dev, examples: list, out_jsonl: str, tag: st
             rows.append(row)
             fh.write(json.dumps(row) + "\n")
     return rows
+
+
+def generate_batch(model, tok, dev, prompts: list[str], max_new_tokens: int = 256) -> list[str]:
+    """Greedy por lotes con relleno a la izquierda. Determinista para un orden y tamaño de lote fijos,
+    pero puede diferir en algún token de la generación de uno en uno: no mezclar ambos modos en un experimento."""
+    import torch
+    old = tok.padding_side
+    tok.padding_side = "left"
+    try:
+        enc = tok(prompts, return_tensors="pt", padding=True).to(dev)
+        with torch.no_grad():
+            out = model.generate(**enc, max_new_tokens=max_new_tokens, do_sample=False,
+                                 pad_token_id=tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id,
+                                 stop_strings=[STOP], tokenizer=tok)
+    finally:
+        tok.padding_side = old
+    n = enc["input_ids"].shape[1]
+    return [tok.decode(o[n:], skip_special_tokens=True) for o in out]
+
+
+def evaluate_mbpp_batched(model, tok, dev, examples: list, tag: str, batch_size: int = 16, max_new_tokens: int = 256,
+                          on_rows=None, test_workers: int = 4) -> list[dict]:
+    """Genera por lotes (ordenados por longitud de prompt, determinista) y ejecuta los tests en paralelo.
+    `on_rows(rows)` se llama tras cada lote para guardar de forma reanudable."""
+    from concurrent.futures import ThreadPoolExecutor
+    order = sorted(examples, key=lambda e: (len(tok(build_prompt(e)).input_ids), e["task_id"]))
+    all_rows = []
+    with ThreadPoolExecutor(test_workers) as pool:
+        for i in range(0, len(order), batch_size):
+            chunk = order[i:i + batch_size]
+            prompts = [build_prompt(e) for e in chunk]
+            t0 = time.time()
+            texts = generate_batch(model, tok, dev, prompts, max_new_tokens)
+            dt = (time.time() - t0) / len(chunk)
+            results = list(pool.map(lambda a: run_tests(extract_code(a[1]), a[0]), zip(chunk, texts)))
+            rows = [{"task_id": e["task_id"], "model": tag, "prompt": p, "generation": t, "passed": ok, "error": err,
+                     "gen_seconds": round(dt, 2), "gen_mode": f"batch{batch_size}"}
+                    for e, p, t, (ok, err) in zip(chunk, prompts, texts, results)]
+            if on_rows:
+                on_rows(rows)
+            all_rows += rows
+    return all_rows
 
 
 def evaluate_mbpp(model_path: str, examples: list, out_jsonl: str, max_new_tokens: int = 256) -> list[dict]:

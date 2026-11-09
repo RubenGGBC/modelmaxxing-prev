@@ -128,7 +128,17 @@ def load_for_variants(path: str, device: str, fp32_modules: list[str], dtype=tor
     tok = AutoTokenizer.from_pretrained(path)
     model = AutoModelForCausalLM.from_pretrained(path, dtype=dtype).to(device).eval()
     upcast_modules(model, fp32_modules)
+    model.generation_config = neutral_generation_config(tok)
     return model, tok
+
+
+def neutral_generation_config(tok):
+    """Greedy puro e idéntico para todas las variantes. Evita heredar la generation_config del esqueleto
+    (p. ej. el Instruct trae repetition_penalty=1.1, que se aplica incluso con do_sample=False)."""
+    from transformers import GenerationConfig
+    eos = [tok.convert_tokens_to_ids(t) for t in ("<|endoftext|>", "<|im_end|>") if t in tok.get_vocab()]
+    return GenerationConfig(do_sample=False, repetition_penalty=1.0, eos_token_id=eos,
+                            pad_token_id=tok.pad_token_id if tok.pad_token_id is not None else eos[0])
 
 
 def dtype_report(model) -> dict:

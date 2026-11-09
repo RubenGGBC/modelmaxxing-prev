@@ -7,7 +7,10 @@ Configuraciones (todas en bf16, sin módulos en FP32: son referencias naturales 
 Fases: `nll` (NLL de la solución de referencia dada la consigna, por problema), `pass` (pass@1 greedy,
 256 tokens, sandbox Docker), `weights` (normas y cosenos de Δ_R, Δ_D), `report`. Reanudable por problema.
 
-Uso:  PYTHONPATH=src python scripts/select_models.py [weights|nll|pass|report|all] [--only NOMBRE ...]"""
+Uso:  PYTHONPATH=src python scripts/select_models.py [weights|nll|pass|report|all] [--only NOMBRE ...]
+        [--out DIR] [--batch-size N] [--dtype bf16|fp16]
+--batch-size 1 = generación de uno en uno (modo de la ejecución local); >1 = por lotes. No mezclar modos en una
+misma carpeta de salida: cada entorno/modo escribe en su propio --out."""
 from __future__ import annotations
 
 import argparse
@@ -18,7 +21,8 @@ from pathlib import Path
 
 import torch
 
-from model_maxxing.evaluation.runner import STOP, build_prompt, evaluate_mbpp_model, run_tests
+from model_maxxing.evaluation.runner import (STOP, build_prompt, evaluate_mbpp_batched, evaluate_mbpp_model, run_tests,
+                                            sandbox_description)
 from model_maxxing.evaluation.splits import check_disjoint, ids_hash, load_split
 from model_maxxing.models.loading import (CheckpointReader, Recipe, dtype_report, load_for_variants, materialize,
                                           memory_report)
@@ -84,7 +88,10 @@ def weights() -> dict:
     return res
 
 
-def run(phase: str, only: list[str] | None) -> None:
+DTYPES = {"bf16": torch.bfloat16, "fp16": torch.float16}
+
+
+def run(phase: str, only: list[str] | None, batch_size: int = 1, dtype: str = "bf16") -> None:
     data = selection_data()
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "data_manifest.json").write_text(json.dumps(
@@ -96,7 +103,13 @@ def run(phase: str, only: list[str] | None) -> None:
         if not ok or bad:
             raise SystemExit(f"Sandbox no operativo: ok={ok} bad={bad} {err}")
     dev = "cuda"
-    model, tok = load_for_variants(M["R"], dev, fp32_modules=[])
+    model, tok = load_for_variants(M["R"], dev, fp32_modules=[], dtype=DTYPES[dtype])
+    env = {"gpu": torch.cuda.get_device_name(0), "torch": torch.__version__, "dtype": dtype,
+           "gen_mode": f"batch{batch_size}" if batch_size > 1 else "single", "sandbox": sandbox_description()}
+    envf = OUT / "environment.json"
+    if envf.exists() and json.loads(envf.read_text()) != env:
+        raise SystemExit(f"Entorno distinto al de {envf}: {json.loads(envf.read_text())} != {env}. Usa otro --out.")
+    envf.write_text(json.dumps(env, indent=1))
     for name, rec in CONFIGS.items():
         if only and name not in only:
             continue
@@ -113,7 +126,16 @@ def run(phase: str, only: list[str] | None) -> None:
             with open(path, "a", encoding="utf-8") as fh:
                 for ex in todo:
                     nll, n = solution_nll(model, tok, dev, ex)
+                    if nll != nll or nll == float("inf"):
+                        raise SystemExit(f"NLL no finita en {name}/{ex['task_id']} (¿desbordamiento en {dtype}?)")
                     fh.write(json.dumps({"task_id": ex["task_id"], "nll_sum": nll, "n_tokens": n}) + "\n")
+        elif batch_size > 1:
+            def save(rows, path=path):
+                with open(path, "a", encoding="utf-8") as fh:
+                    for row in rows:
+                        fh.write(json.dumps(row) + "
+")
+            evaluate_mbpp_batched(model, tok, dev, todo, tag=name, batch_size=batch_size, on_rows=save)
         else:
             tmp = OUT / f"_tmp_{name}.jsonl"
             for ex in todo:     # de uno en uno para poder reanudar
@@ -176,11 +198,15 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("step", nargs="?", default="all", choices=["weights", "nll", "pass", "report", "all"])
     ap.add_argument("--only", nargs="*")
+    ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--batch-size", type=int, default=1)
+    ap.add_argument("--dtype", default="bf16", choices=list(DTYPES))
     a = ap.parse_args()
+    OUT = Path(a.out)
     if a.step in ("weights", "all"):
         weights()
     for ph in ("nll", "pass"):
         if a.step in (ph, "all"):
-            run(ph, a.only)
+            run(ph, a.only, a.batch_size, a.dtype)
     if a.step in ("report", "all"):
         report()
