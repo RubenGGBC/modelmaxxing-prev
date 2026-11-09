@@ -23,7 +23,7 @@ Escrito para: Rubén, para continuar el experimento en el PC de casa (GPU de 8 G
 | **Confusor importante** | Interpolar R→D mejora a ambos extremos, pero **interpolar R→B también** (bio 2,250, código 1,437). La mejora es encoger el sobreajuste del receptor, no el donante. |
 | Sensibilidad por capa | Efectos de ≤0,003 nats casi en todas partes. Deshacer parte de Δ_R (`dR-`) ayuda a código y a bio a la vez en capas 0–5 y 12–19. Las capas 2, 21 y 23 con la dirección del donante empeoran (hasta +0,052). |
 
-**Lectura honesta:** de momento no hay evidencia de que Claude aporte una modificación útil. Tampoco se ha probado lo contrario: el experimento decisivo no se ha ejecutado.
+**Actualización (2026-11-09):** el experimento decisivo ya está ejecutado (brazos A–E en `results/arms/`, informe en `docs/SPIKE_REPORT.md`). El parche de Claude (D) baja la NLL de forma real frente al control aleatorio, pero no se distingue de la regla fija C ni mejora MBPP. El control R→B (+11 pp en MBPP) domina. Decisión: **PIVOT**. La sección 2 queda completada.
 
 ## 2. Lo que falta
 

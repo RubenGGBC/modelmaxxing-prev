@@ -1,0 +1,76 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Generating train split:   0%|          | 0/120 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 120/120 [00:00<00:00, 2441.39 examples/s]
+Generating test split:   0%|          | 0/257 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 257/257 [00:00<00:00, 73125.03 examples/s]
+Generating validation split:   0%|          | 0/43 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 43/43 [00:00<00:00, 12244.06 examples/s]
+Generating prompt split:   0%|          | 0/7 [00:00<?, ? examples/s]Generating prompt split: 100%|██████████| 7/7 [00:00<00:00, 2322.98 examples/s]
+Generating train split:   0%|          | 0/182822 [00:00<?, ? examples/s]Generating train split:  39%|███▉      | 71000/182822 [00:00<00:00, 681022.75 examples/s]Generating train split:  92%|█████████▏| 168000/182822 [00:00<00:00, 837608.21 examples/s]Generating train split: 100%|██████████| 182822/182822 [00:00<00:00, 811754.65 examples/s]
+Generating test split:   0%|          | 0/6150 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 6150/6150 [00:00<00:00, 740022.65 examples/s]
+Generating validation split:   0%|          | 0/4183 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 4183/4183 [00:00<00:00, 496414.39 examples/s]
+Generating train split:   0%|          | 0/1000 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 1000/1000 [00:00<00:00, 111045.62 examples/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   8%|▊         | 22/290 [00:00<00:01, 217.57it/s]Loading weights:  20%|██        | 59/290 [00:00<00:00, 253.73it/s]Loading weights:  32%|███▏      | 93/290 [00:00<00:00, 278.83it/s]Loading weights:  42%|████▏     | 121/290 [00:00<00:00, 264.29it/s]Loading weights:  53%|█████▎    | 154/290 [00:00<00:00, 283.69it/s]Loading weights:  63%|██████▎   | 183/290 [00:00<00:00, 280.31it/s]Loading weights:  73%|███████▎  | 212/290 [00:00<00:00, 279.76it/s]Loading weights:  83%|████████▎ | 241/290 [00:00<00:00, 268.94it/s]Loading weights:  92%|█████████▏| 268/290 [00:00<00:00, 266.77it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 275.71it/s]
+A {'applied_patch_norm': 0.0, 'nll_bio': 2.29907, 'nll_code': 1.29962, 'med_acc': 0.31333333333333335}
+A MBPP 38 / 100 (369.6 s)
+A_T {'applied_patch_norm': 0.0, 'nll_bio': 2.29863, 'nll_code': 1.30062, 'med_acc': 0.30333333333333334}
+A_T MBPP 45 / 100 (328.8 s)
+D {'applied_patch_norm': 1.000132, 'nll_bio': 2.28527, 'nll_code': 1.28402, 'med_acc': 0.31666666666666665}
+D MBPP 41 / 100 (364.7 s)
+D_T {'applied_patch_norm': 1.000132, 'nll_bio': 2.28632, 'nll_code': 1.28816, 'med_acc': 0.32}
+D_T MBPP 43 / 100 (352.5 s)
+E {'applied_patch_norm': 1.000132, 'nll_bio': 2.299, 'nll_code': 1.29995, 'med_acc': 0.31333333333333335}
+E MBPP 39 / 100 (400.8 s)
+E_T {'applied_patch_norm': 1.000132, 'nll_bio': 2.2984, 'nll_code': 1.30057, 'med_acc': 0.30666666666666664}
+E_T MBPP 43 / 100 (363.7 s)
+C {'applied_patch_norm': 1.000134, 'nll_bio': 2.28436, 'nll_code': 1.28685, 'med_acc': 0.31}
+C MBPP 41 / 100 (367.0 s)
+C_T {'applied_patch_norm': 1.000134, 'nll_bio': 2.28533, 'nll_code': 1.29057, 'med_acc': 0.31333333333333335}
+C_T MBPP 43 / 100 (350.5 s)
+B {'applied_patch_norm': 1.000126, 'nll_bio': 2.34248, 'nll_code': 1.40118, 'med_acc': 0.32}
+B MBPP 43 / 100 (367.0 s)
+B_T {'applied_patch_norm': 1.000126, 'nll_bio': 2.36818, 'nll_code': 1.44444, 'med_acc': 0.30333333333333334}
+B_T MBPP 45 / 100 (431.3 s)
+B2 {'applied_patch_norm': 1.000172, 'nll_bio': 2.29856, 'nll_code': 1.29334, 'med_acc': 0.31333333333333335}
+B2 MBPP 37 / 100 (460.3 s)
+B2_T {'applied_patch_norm': 1.000172, 'nll_bio': 2.29753, 'nll_code': 1.29656, 'med_acc': 0.31333333333333335}
+B2_T MBPP 45 / 100 (407.7 s)
+RB_05 {'applied_patch_norm': 0.0, 'nll_bio': 2.27193, 'nll_code': 1.24399, 'med_acc': 0.33666666666666667}
+RB_05 MBPP 49 / 100 (495.3 s)
+config    MBPP  MedMCQA   NLLbio  NLLcode    |P| válido
+A           38    0.313   2.2991   1.2996  0.000 True
+A_T         45    0.303   2.2986   1.3006  0.000 True
+D           41    0.317   2.2853   1.2840  1.000 True
+D_T         43    0.320   2.2863   1.2882  1.000 True
+E           39    0.313   2.2990   1.2999  1.000 True
+E_T         43    0.307   2.2984   1.3006  1.000 True
+C           41    0.310   2.2844   1.2869  1.000 True
+C_T         43    0.313   2.2853   1.2906  1.000 True
+B           43    0.320   2.3425   1.4012  1.000 False
+B_T         45    0.303   2.3682   1.4444  1.000 False
+B2          37    0.313   2.2986   1.2933  1.000 True
+B2_T        45    0.313   2.2975   1.2966  1.000 True
+RB_05       49    0.337   2.2719   1.2440  0.000 True
+A_T vs A       MBPP +7 pp [+0, +14]  Med -1.0 pp  ΔNLLbio -0.0004  ΔNLLcode +0.0010
+D vs A         MBPP +3 pp [-1, +8]  Med +0.3 pp  ΔNLLbio -0.0138  ΔNLLcode -0.0156
+D_T vs A       MBPP +5 pp [-2, +12]  Med +0.7 pp  ΔNLLbio -0.0127  ΔNLLcode -0.0115
+E vs A         MBPP +1 pp [+0, +3]  Med +0.0 pp  ΔNLLbio -0.0001  ΔNLLcode +0.0003
+E_T vs A       MBPP +5 pp [-2, +12]  Med -0.7 pp  ΔNLLbio -0.0007  ΔNLLcode +0.0009
+C vs A         MBPP +3 pp [+0, +7]  Med -0.3 pp  ΔNLLbio -0.0147  ΔNLLcode -0.0128
+C_T vs A       MBPP +5 pp [-2, +12]  Med +0.0 pp  ΔNLLbio -0.0137  ΔNLLcode -0.0091
+B vs A         MBPP +5 pp [-3, +13]  Med +0.7 pp  ΔNLLbio +0.0434  ΔNLLcode +0.1016
+B_T vs A       MBPP +7 pp [-1, +15]  Med -1.0 pp  ΔNLLbio +0.0691  ΔNLLcode +0.1448
+B2 vs A        MBPP -1 pp [-5, +3]  Med +0.0 pp  ΔNLLbio -0.0005  ΔNLLcode -0.0063
+B2_T vs A      MBPP +7 pp [+0, +14]  Med +0.0 pp  ΔNLLbio -0.0015  ΔNLLcode -0.0031
+RB_05 vs A     MBPP +11 pp [+3, +19]  Med +2.3 pp  ΔNLLbio -0.0271  ΔNLLcode -0.0556
+D_T vs A_T     MBPP -2 pp [-7, +3]  Med +1.7 pp  ΔNLLbio -0.0123  ΔNLLcode -0.0125
+E_T vs A_T     MBPP -2 pp [-6, +2]  Med +0.3 pp  ΔNLLbio -0.0002  ΔNLLcode -0.0001
+C_T vs A_T     MBPP -2 pp [-7, +3]  Med +1.0 pp  ΔNLLbio -0.0133  ΔNLLcode -0.0100
+B_T vs A_T     MBPP +0 pp [-8, +8]  Med +0.0 pp  ΔNLLbio +0.0696  ΔNLLcode +0.1438
+B2_T vs A_T    MBPP +0 pp [-6, +5]  Med +1.0 pp  ΔNLLbio -0.0011  ΔNLLcode -0.0041
+D vs E         MBPP +2 pp [-3, +7]  Med +0.3 pp  ΔNLLbio -0.0137  ΔNLLcode -0.0159
+D vs C         MBPP +0 pp [-3, +3]  Med +0.7 pp  ΔNLLbio +0.0009  ΔNLLcode -0.0028
+D vs B         MBPP -2 pp [-9, +5]  Med -0.3 pp  ΔNLLbio -0.0572  ΔNLLcode -0.1172
+D vs B2        MBPP +4 pp [-1, +10]  Med +0.3 pp  ΔNLLbio -0.0133  ΔNLLcode -0.0093
+D_T vs E_T     MBPP +0 pp [-5, +5]  Med +1.3 pp  ΔNLLbio -0.0121  ΔNLLcode -0.0124
+D_T vs C_T     MBPP +0 pp [-3, +3]  Med +0.7 pp  ΔNLLbio +0.0010  ΔNLLcode -0.0024
+D_T vs B_T     MBPP -2 pp [-10, +6]  Med +1.7 pp  ΔNLLbio -0.0819  ΔNLLcode -0.1563
+D_T vs B2_T    MBPP -2 pp [-8, +4]  Med +0.7 pp  ΔNLLbio -0.0112  ΔNLLcode -0.0084
+mejor válido: A_T

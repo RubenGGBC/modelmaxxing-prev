@@ -1,0 +1,16 @@
+{
+ "name": "E_T",
+ "arm": "E",
+ "alpha_transfer": 0.5,
+ "R_to_B": false,
+ "patch_id": "9f0a51376375074e",
+ "applied_patch_norm": 1.000132,
+ "device": "cuda",
+ "dtype": "float32",
+ "nll_bio": 2.2984,
+ "nll_code": 1.30057,
+ "med_acc": 0.30666666666666664,
+ "mbpp_pass": 43,
+ "mbpp_n": 100,
+ "seconds": 363.7
+}
