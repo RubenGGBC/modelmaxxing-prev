@@ -1,0 +1,40 @@
+project: model-maxxing
+experiment: spike-001
+
+models:
+  base: Qwen/Qwen2.5-3B
+  receiver: LOCAL_MEDICAL_QWEN_CHECKPOINT   # BLOQUEO: pendiente de indicar ruta/repo
+  donor: Qwen/Qwen2.5-Coder-3B
+
+objectives:
+  target: python
+  protected:
+    - medical_qa
+
+constraints:
+  max_protected_loss_pp: 5.0
+  preserve_receiver_architecture: true
+  standalone_inference: true
+
+evaluation:
+  coding_dataset: mbpp
+  medical_dataset: medical_qa
+  diagnostic_sample_size: 100
+  selection_sample_size: 100
+  seed: 42
+
+experiments:
+  interpolation:
+    enabled: true
+    alphas: [0.0, 0.25, 0.5, 0.75, 1.0]
+  task_vector:
+    enabled: auto_if_compatible
+    alphas: [0.0, 0.25, 0.5, 0.75, 1.0]
+  selective_transfer:
+    enabled: optional
+    max_candidates: 5
+
+output:
+  directory: results/
+  save_full_checkpoints: false
+  save_recipes: true

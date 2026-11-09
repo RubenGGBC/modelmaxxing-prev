@@ -1,0 +1,35 @@
+{
+ "B-R": {
+  "shapes": {
+   "only_in_a": [],
+   "only_in_b": [],
+   "shape_mismatch": [],
+   "compatible": true
+  },
+  "config_diff": {},
+  "tokenizer_identical": false,
+  "compatible": false
+ },
+ "B-D": {
+  "shapes": {
+   "only_in_a": [],
+   "only_in_b": [],
+   "shape_mismatch": [],
+   "compatible": true
+  },
+  "config_diff": {},
+  "tokenizer_identical": false,
+  "compatible": false
+ },
+ "R-D": {
+  "shapes": {
+   "only_in_a": [],
+   "only_in_b": [],
+   "shape_mismatch": [],
+   "compatible": true
+  },
+  "config_diff": {},
+  "tokenizer_identical": false,
+  "compatible": false
+ }
+}

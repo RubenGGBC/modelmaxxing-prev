@@ -1,0 +1,1 @@
+{"operator": "interpolate", "alpha": 0.25, "receiver": "models_cache/Qwen2.5-0.5B", "donor": "models_cache/Qwen2.5-Coder-0.5B", "n": 100, "passed": 17}

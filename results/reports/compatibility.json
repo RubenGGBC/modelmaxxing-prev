@@ -1,0 +1,35 @@
+{
+  "receiver_vs_donor": {
+    "shapes": {
+      "only_in_a": [],
+      "only_in_b": [],
+      "shape_mismatch": [],
+      "compatible": true
+    },
+    "config_diff": {},
+    "tokenizer_identical": true,
+    "compatible": true
+  },
+  "base_vs_donor": {
+    "shapes": {
+      "only_in_a": [],
+      "only_in_b": [],
+      "shape_mismatch": [],
+      "compatible": true
+    },
+    "config_diff": {},
+    "tokenizer_identical": true,
+    "compatible": true
+  },
+  "base_vs_receiver": {
+    "shapes": {
+      "only_in_a": [],
+      "only_in_b": [],
+      "shape_mismatch": [],
+      "compatible": true
+    },
+    "config_diff": {},
+    "tokenizer_identical": true,
+    "compatible": true
+  }
+}

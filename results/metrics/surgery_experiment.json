@@ -1,0 +1,19 @@
+{
+ "patch": "1367e530f23585cf",
+ "control_patch": "585c5782ba77efb6",
+ "alpha": 0.1,
+ "n": 100,
+ "survival": {
+  "C_vs_A": 0.13020461797714233,
+  "D_vs_A": 0.1298384666442871,
+  "patch_norm_direct": 0.1446528136730194,
+  "R_star_differs": true
+ },
+ "passed": {
+  "A_transfer": 44,
+  "C_transfer_Pclaude": 44,
+  "D_transfer_Pcontrol": 44,
+  "E_Pclaude_only": 46,
+  "Dctrl_Pcontrol_only": 47
+ }
+}

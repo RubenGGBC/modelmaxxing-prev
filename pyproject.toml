@@ -1,0 +1,17 @@
+[project]
+name = "model-maxxing"
+version = "0.1.0"
+description = "Spike de viabilidad: transferencia de capacidades entre LLMs"
+requires-python = ">=3.10"
+dependencies = ["torch", "safetensors", "pyyaml", "numpy"]
+
+[project.optional-dependencies]
+eval = ["transformers", "datasets", "accelerate"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

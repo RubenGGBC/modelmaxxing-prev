@@ -1,0 +1,17 @@
+{
+ "Qwen2.5-0.5B": {
+  "pubmed_abstracts": 2.299145174847253,
+  "mbpp_code": 1.4350841888613997,
+  "medmcqa_explanations": 3.098765558411144
+ },
+ "Med-Receiver": {
+  "pubmed_abstracts": 2.270159846871909,
+  "mbpp_code": 1.4993185159136082,
+  "medmcqa_explanations": 3.172570745244256
+ },
+ "Code-Donor": {
+  "pubmed_abstracts": 2.3286958447699413,
+  "mbpp_code": 1.491909924711478,
+  "medmcqa_explanations": 3.1847858557384376
+ }
+}
