@@ -1,0 +1,38 @@
+{
+ "arm": "D",
+ "author": "Claude Opus 5.5 (claude-opus-5-5), sesión del 2026-11-09 en el PC de casa",
+ "status": "PRE-REGISTRADO: fijado y commiteado antes de evaluar ningún brazo con los datos de evaluación",
+ "inputs_seen": [
+  "results/metrics/v3_sensitivity_table.json (datos visibles: PubMedQA[100:140] y MBPP full train[0:40])",
+  "pesos de B, R y D (deltas Δ_D = D-B y Δ_R = R-B en down_proj)",
+  "baselines ya publicados en docs/ESTADO_Y_PLAN.md (B, R y D sin cirugía en MBPP[:100] y MedMCQA[:300]); no se usaron para elegir capas ni pesos"
+ ],
+ "inputs_not_seen": "ningún resultado de los brazos B, B2, C, D o E en datos de evaluación (no existían)",
+ "budget": {"N0": 1.0, "max_tensors": 12, "max_rank": 8, "pattern": "model.layers.<i>.mlp.down_proj.weight"},
+ "rule": {
+  "directions": {
+   "dR-": "SVD rango 8 de -(R-B) en la capa, normalizada a norma 1",
+   "dD+": "SVD rango 8 de (D-B) en la capa, normalizada a norma 1"
+  },
+  "gain_per_direction": "g = max(0, -(d_code + lambda * d_bio)) usando la tabla de sensibilidad (efecto con norma n_t = N0/sqrt(12))",
+  "lambda": 0.5,
+  "combined_direction": "M_l = sum_dir g_dir * dir_unit; luego SVD rango 8 de M_l y normalización a norma 1",
+  "layer_score": "G_l = sqrt(sum_dir g_dir^2)",
+  "selection": "las 12 capas con mayor G_l",
+  "norm_allocation": "n_l proporcional a G_l con sum n_l^2 = N0^2 (óptimo de primer orden bajo presupuesto de Frobenius)",
+  "cap_per_tensor": 0.5,
+  "cap_rule": "si n_l > 0.5 se fija en 0.5 y el presupuesto restante se reparte entre las demás capas en proporción a G_l (iterando)",
+  "sign": "se suma al receptor: R* = R + P_D"
+ },
+ "expected_layers": [0, 1, 3, 4, 5, 12, 13, 16, 17, 18, 19, 20],
+ "rationale": [
+  "La tabla visible muestra que deshacer parte de Δ_R (dR-) baja a la vez la NLL de código y la biomédica en las capas 0-5 y 12-19: es el mismo fenómeno que el confusor R->B (el receptor está sobreajustado y encogerlo ayuda).",
+  "La dirección del donante (dD+) aporta poco y es dañina en las capas 2, 21 y 23; g = max(0, ...) las excluye solas, sin regla ad hoc.",
+  "Con respuesta lineal y presupuesto de norma Frobenius total, el reparto que maximiza la ganancia es n_l proporcional a la ganancia por unidad de norma; el reparto uniforme (brazo C) desperdicia presupuesto en capas casi planas.",
+  "dR- y dD+ son casi ortogonales (cos 0,005 global), así que combinarlas en una capa suma ganancias en cuadratura en vez de elegir una sola.",
+  "lambda = 0,5 prioriza código (objetivo MBPP) pero sigue protegiendo la NLL biomédica; el criterio de validez sobre bio (R + 0,02) es holgado frente a los efectos esperados (<0,02 nats).",
+  "El tope de 0,5 por tensor (~1,7 veces la norma medida en la tabla) limita la extrapolación lineal: la tabla solo midió una escala, y sin tope la capa 0 se llevaría 0,75."
+ ],
+ "prediction": "Efecto pequeño: mejora de NLL de código del orden de 0,01-0,02 nats en R* respecto a R, y probablemente sin diferencia significativa en MBPP (IC de ±9 pp con 100 problemas). Si D gana a E (control aleatorio) en NLL pero no en MBPP, la lectura es: dirección útil, efecto por debajo de la resolución de MBPP.",
+ "control": "E = mismas capas, rangos y escalas que D, direcciones u, v aleatorias (seed 0), reescalado a la misma norma total"
+}
