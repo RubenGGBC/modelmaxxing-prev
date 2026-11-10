@@ -1,0 +1,12 @@
+{
+ "method": "RAND1",
+ "donor": "models_cache/Qwen2.5-0.5B",
+ "selection_digest": "e4a9ed35dc0ad068",
+ "n_params": 130333056,
+ "dtype": "torch.bfloat16",
+ "sha256": {
+  "model.safetensors": "6c36c223e9914a762920f9f8e4b0741ce75e3965da81dec6bca2873629866225",
+  "config.json": "7ce1ae3e19ab14a186ef9a4b32b4e8a2fe94500fb66ce48fe41f78623fb7f89f",
+  "selection.json": "92b798e037e1bc4f91cc28d804c881291463027e293167937691fc67a4f36d80"
+ }
+}

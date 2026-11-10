@@ -1,0 +1,44 @@
+{
+ "name": "R",
+ "method": "R",
+ "mu": 0.0,
+ "recipe": {
+  "receiver": "models_cache/Qwen2.5-0.5B",
+  "transfer": "identity",
+  "alpha": 0.0,
+  "donor": null,
+  "base": null,
+  "patched_tensors": []
+ },
+ "slice_sha256": null,
+ "applied_patch_norm_after_transfer": 0.0,
+ "seconds": {
+  "merge": 0.9,
+  "nll": 2.3,
+  "pass": 25.3
+ },
+ "memory": {
+  "process_max_rss_gb": 2.87,
+  "mps_driver_allocated_gb": 2.68
+ },
+ "dtypes": {
+  "torch.float32": 494032768
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 256,
+  "batch_size": 8
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "dbd633b3e991d75643629cd8cfc26754eb6b2c44",
+  "git_dirty": true
+ }
+}

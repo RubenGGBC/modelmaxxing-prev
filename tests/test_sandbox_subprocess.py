@@ -1,8 +1,9 @@
-import os
+import sys
 
 import pytest
 
-pytestmark = pytest.mark.skipif(os.name != "posix", reason="MM_SANDBOX=subprocess solo en Linux (Kaggle/Colab)")
+# macOS es POSIX pero no admite RLIMIT_AS: este modo es solo para VMs Linux desechables.
+pytestmark = pytest.mark.skipif(not sys.platform.startswith("linux"), reason="MM_SANDBOX=subprocess solo en Linux (Kaggle/Colab)")
 
 
 @pytest.fixture(autouse=True)

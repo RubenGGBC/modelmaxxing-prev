@@ -1,0 +1,44 @@
+{
+ "name": "IM_mu0.05",
+ "method": "IM",
+ "mu": 0.05,
+ "recipe": {
+  "receiver": "models_cache/Qwen2.5-0.5B",
+  "transfer": "interpolate",
+  "alpha": 0.05,
+  "donor": "results/experiments/hito_a_apm_smoke/harness/slices/IM",
+  "base": null,
+  "patched_tensors": []
+ },
+ "slice_sha256": "aff8914ec707fcaf9e2d4dc97197cded50b1c63e1d3a7a82e56f54d83ea47f80",
+ "applied_patch_norm_after_transfer": 0.0,
+ "seconds": {
+  "merge": 5.3,
+  "nll": 2.1,
+  "pass": 13.8
+ },
+ "memory": {
+  "process_max_rss_gb": 3.29,
+  "mps_driver_allocated_gb": 2.68
+ },
+ "dtypes": {
+  "torch.float32": 494032768
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 256,
+  "batch_size": 8
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "dbd633b3e991d75643629cd8cfc26754eb6b2c44",
+  "git_dirty": true
+ }
+}

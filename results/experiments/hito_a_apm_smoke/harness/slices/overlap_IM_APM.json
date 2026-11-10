@@ -1,0 +1,7 @@
+{
+ "layers": 1.0,
+ "hidden": 1.0,
+ "q_heads_mean": 1.0,
+ "kv_heads_mean": 1.0,
+ "mlp_mean": 1.0
+}

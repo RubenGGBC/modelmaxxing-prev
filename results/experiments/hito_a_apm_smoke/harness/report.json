@@ -1,0 +1,129 @@
+{
+ "dev": {
+  "n": 16,
+  "arms": {
+   "APM_mu0.05": {
+    "passed": 4,
+    "n": 16,
+    "pass_at_1": 0.25,
+    "nll_code": 0.94671,
+    "syntax_errors": 1,
+    "timeouts": 0
+   },
+   "APM_mu0.1": {
+    "passed": 4,
+    "n": 16,
+    "pass_at_1": 0.25,
+    "nll_code": 0.95524,
+    "syntax_errors": 2,
+    "timeouts": 0
+   },
+   "IM_mu0.05": {
+    "passed": 4,
+    "n": 16,
+    "pass_at_1": 0.25,
+    "nll_code": 0.94671,
+    "syntax_errors": 1,
+    "timeouts": 0
+   },
+   "IM_mu0.1": {
+    "passed": 4,
+    "n": 16,
+    "pass_at_1": 0.25,
+    "nll_code": 0.95524,
+    "syntax_errors": 2,
+    "timeouts": 0
+   },
+   "R": {
+    "passed": 7,
+    "n": 16,
+    "pass_at_1": 0.4375,
+    "nll_code": 0.95623,
+    "syntax_errors": 1,
+    "timeouts": 0
+   }
+  },
+  "paired_bootstrap": {
+   "APM_mu0.05 vs R": {
+    "diff": -0.1875,
+    "ci_low": -0.375,
+    "ci_high": 0.0,
+    "wrong_to_right": 0,
+    "right_to_wrong": 3
+   },
+   "APM_mu0.1 vs R": {
+    "diff": -0.1875,
+    "ci_low": -0.375,
+    "ci_high": 0.0,
+    "wrong_to_right": 0,
+    "right_to_wrong": 3
+   },
+   "IM_mu0.05 vs R": {
+    "diff": -0.1875,
+    "ci_low": -0.375,
+    "ci_high": 0.0,
+    "wrong_to_right": 0,
+    "right_to_wrong": 3
+   },
+   "IM_mu0.1 vs R": {
+    "diff": -0.1875,
+    "ci_low": -0.375,
+    "ci_high": 0.0,
+    "wrong_to_right": 0,
+    "right_to_wrong": 3
+   }
+  }
+ },
+ "test": {
+  "n": 16,
+  "arms": {
+   "APM_mu0.05": {
+    "passed": 8,
+    "n": 16,
+    "pass_at_1": 0.5,
+    "nll_code": 0.87779,
+    "syntax_errors": 0,
+    "timeouts": 0
+   },
+   "IM_mu0.05": {
+    "passed": 8,
+    "n": 16,
+    "pass_at_1": 0.5,
+    "nll_code": 0.87779,
+    "syntax_errors": 0,
+    "timeouts": 0
+   },
+   "R": {
+    "passed": 6,
+    "n": 16,
+    "pass_at_1": 0.375,
+    "nll_code": 0.87689,
+    "syntax_errors": 0,
+    "timeouts": 0
+   }
+  },
+  "paired_bootstrap": {
+   "APM_mu0.05 vs R": {
+    "diff": 0.125,
+    "ci_low": 0.0,
+    "ci_high": 0.3125,
+    "wrong_to_right": 2,
+    "right_to_wrong": 0
+   },
+   "IM_mu0.05 vs R": {
+    "diff": 0.125,
+    "ci_low": 0.0,
+    "ci_high": 0.3125,
+    "wrong_to_right": 2,
+    "right_to_wrong": 0
+   },
+   "APM_mu0.05 vs IM_mu0.05": {
+    "diff": 0.0,
+    "ci_low": 0.0,
+    "ci_high": 0.0,
+    "wrong_to_right": 0,
+    "right_to_wrong": 0
+   }
+  }
+ }
+}

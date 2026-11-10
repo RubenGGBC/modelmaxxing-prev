@@ -67,8 +67,8 @@ def _can_unshare_net() -> bool:
 def _run_subprocess_sandbox(d: str, f: Path, timeout: int) -> tuple[bool, str]:
     """Modo MM_SANDBOX=subprocess, SOLO para VMs desechables Linux (Kaggle/Colab) sin Docker:
     subproceso con límites de recursos, directorio temporal, entorno vacío y red cortada si es posible."""
-    if os.name != "posix":
-        raise RuntimeError("MM_SANDBOX=subprocess solo está soportado en Linux")
+    if not sys.platform.startswith("linux"):
+        raise RuntimeError("MM_SANDBOX=subprocess solo está soportado en Linux (macOS no admite RLIMIT_AS)")
     cmd = (["unshare", "-n"] if _can_unshare_net() else []) + [sys.executable, "-I", str(f)]
     try:
         p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout,

@@ -1,0 +1,75 @@
+{
+ "rule": "por método, μ con mayor pass@1 en dev; empate → menor NLL de código en dev; empate → menor μ",
+ "chosen_mu": {
+  "IM": 0.05,
+  "APM": 0.05
+ },
+ "dev_n": 16,
+ "dev_summary": {
+  "APM_mu0.05": {
+   "passed": 4,
+   "n": 16,
+   "pass_at_1": 0.25,
+   "nll_code": 0.94671,
+   "syntax_errors": 1,
+   "timeouts": 0
+  },
+  "APM_mu0.1": {
+   "passed": 4,
+   "n": 16,
+   "pass_at_1": 0.25,
+   "nll_code": 0.95524,
+   "syntax_errors": 2,
+   "timeouts": 0
+  },
+  "IM_mu0.05": {
+   "passed": 4,
+   "n": 16,
+   "pass_at_1": 0.25,
+   "nll_code": 0.94671,
+   "syntax_errors": 1,
+   "timeouts": 0
+  },
+  "IM_mu0.1": {
+   "passed": 4,
+   "n": 16,
+   "pass_at_1": 0.25,
+   "nll_code": 0.95524,
+   "syntax_errors": 2,
+   "timeouts": 0
+  },
+  "R": {
+   "passed": 7,
+   "n": 16,
+   "pass_at_1": 0.4375,
+   "nll_code": 0.95623,
+   "syntax_errors": 1,
+   "timeouts": 0
+  }
+ },
+ "slices": {
+  "IM": {
+   "model.safetensors": "aff8914ec707fcaf9e2d4dc97197cded50b1c63e1d3a7a82e56f54d83ea47f80",
+   "config.json": "4e0e1475948d685629455a09edba05ea49f3c6289ecf6fd7f7c411ea68d49100",
+   "selection.json": "8ca2350560055ad4e2124a3671430bf5d0f39ddc2f09157f55b5bc009c86c2b2"
+  },
+  "APM": {
+   "model.safetensors": "aff8914ec707fcaf9e2d4dc97197cded50b1c63e1d3a7a82e56f54d83ea47f80",
+   "config.json": "4e0e1475948d685629455a09edba05ea49f3c6289ecf6fd7f7c411ea68d49100",
+   "selection.json": "fdd7c095427e698274a3f82ac5c91a33038d167824b976506ceb976b7a3e59fc"
+  }
+ },
+ "config_sha256": "1419ea9e2198903a7e2ad097847a84cf4dce4df5bc7f8f8e303bbd33c969abb1",
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "dbd633b3e991d75643629cd8cfc26754eb6b2c44",
+  "git_dirty": true
+ }
+}

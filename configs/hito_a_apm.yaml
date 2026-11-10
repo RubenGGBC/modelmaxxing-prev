@@ -1,0 +1,43 @@
+# Hito A — APM Qwen2.5-7B → Qwen2.5-1.5B. PRE-REGISTRO: no cambiar tras ejecutar `dev`.
+# Cambios ANTES de cualquier ejecución real (2026-11-10, preparación de Kaggle): profile_dtype bf16→fp32,
+# batch_size 8→16, min_ram_gb 16→12. Ninguno depende de resultados.
+# Uso: PYTHONPATH=src python scripts/hito_a_apm.py configs/hito_a_apm.yaml <fase>
+experiment: hito_a_apm_7b_to_1p5b
+out: results/experiments/hito_a_apm
+
+donor:
+  repo: Qwen/Qwen2.5-7B
+  revision: d149729398750b98c0af14eb82c78cfe92750796
+  license: apache-2.0
+  path: models_cache/Qwen2.5-7B
+  size_gb: 15.23
+receiver:
+  repo: Qwen/Qwen2.5-1.5B
+  revision: 8faed761d45a263340a0528343f099c05c9a4323
+  license: apache-2.0
+  path: models_cache/Qwen2.5-1.5B
+  size_gb: 3.09
+
+resources:
+  work_disk_gb: 6.5        # slices IM y APM (2 × 3,09 GB bf16) + resultados
+  disk_margin_gb: 5        # el sistema necesita aire (swap, cachés)
+  min_ram_gb: 12          # pico real estimado: ~5 GB (construcción del slice)
+
+# Particiones (MBPP; ver evaluation/splits.py). Disjuntas entre sí y con el conjunto quemado de v0.3.
+calibration: {split: diagnostic, offset: 0, n: 128, scope: prompt, max_tokens: 512}   # perfilado APM
+probe:       {split: diagnostic, offset: 256, n: 64}                                 # NLL de slices (diagnóstico)
+dev:         {split: selection}            # 333 problemas: elección de μ
+test:        {split: final_mbpp}           # 157 problemas: sanitized test[100:], SELLADO hasta `lock`
+
+profile_dtype: float32     # T4/P100 sin bf16 nativo; fp16 puede desbordar activaciones de Qwen. FP32 cabe (capa a capa)
+methods: [IM, APM]
+mu_grid: [0.01, 0.02, 0.05, 0.10]          # rango del paper (0,01-0,15); μ del paper para su tabla principal: no publicado
+mu_selection_rule: "por método, μ con mayor pass@1 en dev; empate → menor NLL de código en dev; empate → menor μ"
+eval:
+  dtype: float32           # la fusión con μ≈0,01 es menor que el paso de redondeo de bf16 (2^-8): se evalúa en FP32
+  max_new_tokens: 512
+  batch_size: 16           # GPU de 16 GB: 6,2 GB de pesos FP32 + caché KV ≈1 GB
+
+# Efecto mínimo de interés (fijado antes de ver resultados): +3 pp de pass@1 en test frente a R y frente a IM,
+# con el IC95 % del bootstrap pareado por encima de 0. Por debajo, el resultado se informa como no concluyente.
+min_effect_pp: 3

@@ -1,0 +1,67 @@
+{
+ "stats_sha256": "1217faac72092b1d4795ffc5768848cc05ed9e629ac447d876e6fddfc54c6ca3",
+ "cost": {
+  "layer_seconds": [
+   3.197,
+   0.992,
+   1.13,
+   1.062,
+   1.554,
+   1.462,
+   2.3,
+   2.298,
+   2.097,
+   2.204,
+   1.939,
+   2.231,
+   2.035,
+   2.005,
+   1.719,
+   1.864,
+   2.189,
+   2.192,
+   1.909,
+   1.119,
+   0.91,
+   0.954,
+   1.579,
+   2.156
+  ],
+  "n_examples": 128,
+  "tokens_profiled": 15602,
+  "tokens_total": 15602,
+  "dtype": "torch.bfloat16",
+  "device": "mps",
+  "total_seconds": 43.69,
+  "memory": {
+   "process_max_rss_gb": 0.94,
+   "mps_driver_allocated_gb": 0.13
+  }
+ },
+ "calibration": {
+  "split": "diagnostic",
+  "offset": 0,
+  "n": 128,
+  "scope": "prompt",
+  "max_tokens": 512,
+  "ids_sha256_16": "8d1e3a4917a54126"
+ },
+ "donor": {
+  "repo": "Qwen/Qwen2.5-0.5B",
+  "revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "path": "models_cache/Qwen2.5-0.5B",
+  "size_gb": 0.99
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "dbd633b3e991d75643629cd8cfc26754eb6b2c44",
+  "git_dirty": true
+ }
+}

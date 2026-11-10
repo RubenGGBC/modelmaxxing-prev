@@ -1,0 +1,16 @@
+# Prueba técnica local (sin descargas): perfilado real + recorte APM/IM sobre Qwen2.5-0.5B hacia una
+# arquitectura hipotética con las MISMAS proporciones que 7B→1.5B (canales 0,43; cabezas Q 0,43; KV 0,5; MLP 0,47).
+# No hay receptor real con esa forma: solo se miden coste y el NLL del slice por sí solo (μ=1).
+experiment: smoke_selfprune_0p5b
+out: results/experiments/hito_a_apm_smoke/selfprune
+
+donor: {repo: Qwen/Qwen2.5-0.5B, revision: 060db6499f32faf8b98477b0a26969ef7d8b9987, path: models_cache/Qwen2.5-0.5B, size_gb: 0.99}
+receiver: null
+receiver_arch_override: {hidden_size: 384, num_attention_heads: 6, num_key_value_heads: 1, intermediate_size: 2304}
+
+resources: {work_disk_gb: 1, disk_margin_gb: 5, min_ram_gb: 8}
+calibration: {split: diagnostic, offset: 0, n: 128, scope: prompt, max_tokens: 512}
+probe:       {split: diagnostic, offset: 256, n: 64}
+profile_dtype: bfloat16
+methods: [IM, APM]
+eval: {dtype: float32}
