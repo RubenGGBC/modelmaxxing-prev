@@ -213,11 +213,20 @@ def solution_nll(model, tok, dev, ex: dict) -> tuple[float, int]:
     return nll, int(ids.shape[1] - n_p)
 
 
+def load_causal_lm(path: str, dtype, dev: str):
+    """En CUDA carga directamente en la GPU (device_map): evita una copia FP32 completa en RAM, importante
+    cuando dos procesos (uno por GPU) cargan a la vez en una VM con poca RAM (Kaggle)."""
+    from transformers import AutoModelForCausalLM
+    if dev.startswith("cuda"):
+        return AutoModelForCausalLM.from_pretrained(path, dtype=dtype, device_map=dev).eval()
+    return AutoModelForCausalLM.from_pretrained(path, dtype=dtype).to(dev).eval()
+
+
 def load_receiver_skeleton(path: str, dtype):
     from transformers import AutoModelForCausalLM, AutoTokenizer
     dev = best_device()
     tok = AutoTokenizer.from_pretrained(path)
-    model = AutoModelForCausalLM.from_pretrained(path, dtype=dtype).to(dev).eval()
+    model = load_causal_lm(path, dtype, dev)
     model.generation_config = neutral_generation_config(tok)
     return model, tok, dev
 
@@ -232,7 +241,7 @@ def phase_slice_nll(cfg: dict, out: Path, limit: int | None) -> None:
     tok = AutoTokenizer.from_pretrained(tokenizer_path(cfg))
     dev = best_device()
     for name, path in targets.items():
-        model = AutoModelForCausalLM.from_pretrained(str(path), dtype=DT[cfg["eval"]["dtype"]]).to(dev).eval()
+        model = load_causal_lm(str(path), DT[cfg["eval"]["dtype"]], dev)
         s = n = 0
         for ex in rows:
             a, b = solution_nll(model, tok, dev, ex)
