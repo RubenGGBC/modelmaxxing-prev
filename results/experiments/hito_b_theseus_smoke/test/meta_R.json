@@ -1,0 +1,43 @@
+{
+ "name": "R",
+ "spec": {
+  "delta_dir": null,
+  "scale": 1.0,
+  "alpha": 0.0,
+  "exclude": []
+ },
+ "delta_norm_applied": 0.0,
+ "delta_tensors_applied": 0,
+ "seconds": {
+  "merge": 1.0,
+  "nll_diagnostic": 2.0,
+  "pass_diagnostic": 22.7,
+  "nll_final_humaneval": 0.5,
+  "pass_final_humaneval": 4.3
+ },
+ "memory": {
+  "process_max_rss_gb": 3.61,
+  "mps_driver_allocated_gb": 2.69
+ },
+ "dtypes": {
+  "torch.float32": 494032768
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 256,
+  "batch_size": 8,
+  "max_batch_tokens": 16384
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "8ed0ba86d3521be011bcefc8bd641ae869b4da16",
+  "git_dirty": true
+ }
+}

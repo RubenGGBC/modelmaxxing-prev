@@ -1,0 +1,43 @@
+# Hito B — Theseus: τ = Qwen2.5-Coder-7B − Qwen2.5-7B trasladado a Qwen2.5-1.5B.
+# PRE-REGISTRO (2026-11-10): no cambiar tras ejecutar `dev_nll`. Diseño: docs/HITO_B_THESEUS_PLAN.md.
+# Uso: PYTHONPATH=src python scripts/hito_b_theseus.py configs/hito_b_theseus.yaml <fase>
+experiment: hito_b_theseus_coder7b_to_1p5b
+out: results/experiments/hito_b_theseus
+
+models:
+  base_a:   {repo: Qwen/Qwen2.5-7B,       revision: d149729398750b98c0af14eb82c78cfe92750796, path: models_cache/Qwen2.5-7B,       size_gb: 15.23, license: apache-2.0}
+  ft_a:     {repo: Qwen/Qwen2.5-Coder-7B, revision: 0396a76181e127dfc13e5c5ec48a8cee09938b02, path: models_cache/Qwen2.5-Coder-7B, size_gb: 15.23, license: apache-2.0}
+  receiver: {repo: Qwen/Qwen2.5-1.5B,     revision: 8faed761d45a263340a0528343f099c05c9a4323, path: models_cache/Qwen2.5-1.5B,     size_gb: 3.09,  license: apache-2.0}
+
+resources:
+  work_disk_gb: 25         # 3 deltas FP32 (~5,2 GB c/u) + 2 slices bf16 (3,1 GB c/u) + resultados
+  disk_margin_gb: 5
+  min_ram_gb: 24
+
+# Datos de alineamiento: partición de diagnóstico (MBPP train/prompt), prompt + solución de referencia.
+alignment: {split: diagnostic, offset: 0, n: 256, scope: prompt+reference, max_tokens: 512, dtype: float32, rand_seed: 0}
+
+# Referencia del Hito A (APM μ=0,02) y controles exploratorios, reconstruidos de las estadísticas guardadas.
+apm_reference:
+  stats: results/experiments/hito_a_apm/profile/activation_stats.pt
+  stats_sha256: 42d627519fec29dcba5a971f6a9c56ebcdc442552bf17152e239c72f692088b7
+  apm_slice_sha256: 307c498206bff5a1608fa360652584df63652802c6093c40478e2e674734167a
+  rand_seed: 0
+
+dev:  {split: selection}                                   # 333
+test:
+  - {split: final_mbpp}                                    # 157 (usado una vez en el Hito A con brazos congelados)
+  - {split: final_humaneval}                               # 163 (164 menos HumanEval/32, no resoluble), NUEVO
+
+alpha_arms: [TH, THnoQK, NAIVE, RAND]   # TH: Theseus · THnoQK: sin q/k (RoPE) · NAIVE: sin alinear · RAND: ruido por las mismas T
+alpha_grid: [0.05, 0.1, 0.25, 0.5, 1.0]
+nll_top_k: 2                             # etapa 1: NLL dev de todo el grid → 2 mejores α por brazo pasan a pass@1
+fixed_arms: [APM_mu0.02, SHRINK_mu0.02, APMRAND_mu0.02]  # APM = referencia; SHRINK y APMRAND = exploratorios del Hito A
+selection_rule: "por brazo, entre los α elegidos por NLL: mayor pass@1 en dev; empate → menor NLL; empate → menor α"
+
+eval: {dtype: float32, max_new_tokens: 512, batch_size: 16, max_batch_tokens: 16384}
+
+criterion: >-
+  Métrica primaria: pass@1 combinado en test (MBPP final + HumanEval+, 320 problemas). GO si el mejor brazo Theseus
+  (TH o THnoQK) supera a R y a APM_mu0.02 en ≥ 3 pp con IC95 del bootstrap pareado > 0. Además, para atribuir el
+  efecto al contenido de τ debe superar a RAND, y para atribuirlo al alineamiento, a NAIVE. Si no, no concluyente.

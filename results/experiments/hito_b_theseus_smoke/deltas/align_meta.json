@@ -1,0 +1,53 @@
+{
+ "alignment": {
+  "split": "diagnostic",
+  "offset": 0,
+  "n": 48,
+  "scope": "prompt+reference",
+  "max_tokens": 512,
+  "dtype": "float32",
+  "rand_seed": 0,
+  "ids_sha256_16": "a40f74f874026b7a",
+  "tokens": 8826
+ },
+ "seconds": 511.0,
+ "memory": {
+  "process_max_rss_gb": 2.76,
+  "mps_driver_allocated_gb": 1.17
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "8ed0ba86d3521be011bcefc8bd641ae869b4da16",
+  "git_dirty": true
+ },
+ "models": {
+  "base_a": {
+   "repo": "Qwen/Qwen2.5-0.5B",
+   "revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+   "path": "models_cache/Qwen2.5-0.5B",
+   "size_gb": 0.99,
+   "license": "apache-2.0"
+  },
+  "ft_a": {
+   "repo": "Qwen/Qwen2.5-Coder-0.5B",
+   "revision": "8123ea2e9354afb7ffcc6c8641d1b2f5ecf18301",
+   "path": "models_cache/Qwen2.5-Coder-0.5B",
+   "size_gb": 0.99,
+   "license": "apache-2.0"
+  },
+  "receiver": {
+   "repo": "Qwen/Qwen2.5-0.5B",
+   "revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+   "path": "models_cache/Qwen2.5-0.5B",
+   "size_gb": 0.99,
+   "license": "apache-2.0"
+  }
+ }
+}

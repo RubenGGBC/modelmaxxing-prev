@@ -7,3 +7,4 @@ __pycache__/
 .DS_Store
 results/arms/patches/
 results/experiments/**/slices/**/model.safetensors
+results/experiments/**/deltas/**/*.safetensors

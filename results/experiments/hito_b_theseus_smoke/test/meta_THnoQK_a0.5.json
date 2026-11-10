@@ -1,0 +1,46 @@
+{
+ "name": "THnoQK_a0.5",
+ "spec": {
+  "delta_dir": "results/experiments/hito_b_theseus_smoke/deltas/TH",
+  "scale": 1.0,
+  "alpha": 0.5,
+  "exclude": [
+   "self_attn.q_proj.",
+   "self_attn.k_proj."
+  ]
+ },
+ "delta_norm_applied": 159.5904537899826,
+ "delta_tensors_applied": 144,
+ "seconds": {
+  "merge": 3.2,
+  "nll_diagnostic": 2.2,
+  "pass_diagnostic": 24.2,
+  "nll_final_humaneval": 0.5,
+  "pass_final_humaneval": 9.5
+ },
+ "memory": {
+  "process_max_rss_gb": 3.61,
+  "mps_driver_allocated_gb": 2.68
+ },
+ "dtypes": {
+  "torch.float32": 494032768
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 256,
+  "batch_size": 8,
+  "max_batch_tokens": 16384
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "8ed0ba86d3521be011bcefc8bd641ae869b4da16",
+  "git_dirty": true
+ }
+}

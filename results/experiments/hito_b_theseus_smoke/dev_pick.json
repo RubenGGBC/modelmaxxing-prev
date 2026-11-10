@@ -1,0 +1,31 @@
+{
+ "rule": "por brazo, los 1 α con menor NLL de código en dev (empate → α menor)",
+ "picked": {
+  "TH": [
+   0.5
+  ],
+  "THnoQK": [
+   0.5
+  ],
+  "NAIVE": [
+   0.5
+  ],
+  "RAND": [
+   0.5
+  ]
+ },
+ "dev_nll": {
+  "R": 0.95623,
+  "TH_a0.5": 1.98154,
+  "TH_a1": 9.82895,
+  "THnoQK_a0.5": 1.68689,
+  "THnoQK_a1": 10.23178,
+  "NAIVE_a0.5": 1.98358,
+  "NAIVE_a1": 9.83166,
+  "RAND_a0.5": 9.47505,
+  "RAND_a1": 15.20334,
+  "APM_mu0.02": 0.95623,
+  "SHRINK_mu0.02": 0.96609,
+  "APMRAND_mu0.02": 0.95623
+ }
+}

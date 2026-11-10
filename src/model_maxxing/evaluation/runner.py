@@ -138,7 +138,7 @@ def evaluate_mbpp_model(model, tok, dev, examples: list, out_jsonl: str, tag: st
     return rows
 
 
-def generate_batch(model, tok, dev, prompts: list[str], max_new_tokens: int = 256) -> list[str]:
+def generate_batch(model, tok, dev, prompts: list[str], max_new_tokens: int = 256, stops: list[str] | None = None) -> list[str]:
     """Greedy por lotes con relleno a la izquierda. Determinista para un orden y tamaño de lote fijos,
     pero puede diferir en algún token de la generación de uno en uno: no mezclar ambos modos en un experimento."""
     import torch
@@ -149,7 +149,7 @@ def generate_batch(model, tok, dev, prompts: list[str], max_new_tokens: int = 25
         with torch.no_grad():
             out = model.generate(**enc, max_new_tokens=max_new_tokens, do_sample=False,
                                  pad_token_id=tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id,
-                                 stop_strings=[STOP], tokenizer=tok)
+                                 stop_strings=stops or [STOP], tokenizer=tok)
     finally:
         tok.padding_side = old
     n = enc["input_ids"].shape[1]
@@ -173,12 +173,19 @@ def token_budget_chunks(lengths: list[int], batch_size: int, max_new_tokens: int
 
 
 def evaluate_mbpp_batched(model, tok, dev, examples: list, tag: str, batch_size: int = 16, max_new_tokens: int = 256,
-                          on_rows=None, test_workers: int = 4, max_batch_tokens: int | None = None) -> list[dict]:
+                          on_rows=None, test_workers: int = 4, max_batch_tokens: int | None = None,
+                          task=None) -> list[dict]:
     """Genera por lotes (ordenados por longitud de prompt, determinista) y ejecuta los tests en paralelo.
     `max_batch_tokens` limita B·(L_max + max_new_tokens) para no agotar la memoria con prompts muy largos.
+    `task` (opcional) cambia el formato: objeto/módulo con build_prompt, extract_code, run(ex, completado) y STOPS
+    (p. ej. evaluation.humaneval). Sin `task` el comportamiento es el de MBPP, idéntico al del Hito A.
     `on_rows(rows)` se llama tras cada lote para guardar de forma reanudable."""
     from concurrent.futures import ThreadPoolExecutor
-    keyed = sorted(((len(tok(build_prompt(e)).input_ids), e["task_id"], e) for e in examples), key=lambda x: x[:2])
+    bp = task.build_prompt if task else build_prompt
+    ex_fn = task.extract_code if task else extract_code
+    run_fn = task.run if task else (lambda e, c: run_tests(c, e))
+    stops = task.STOPS if task else None
+    keyed = sorted(((len(tok(bp(e)).input_ids), e["task_id"], e) for e in examples), key=lambda x: x[:2])
     order = [e for _, _, e in keyed]
     chunks = token_budget_chunks([n for n, _, _ in keyed], batch_size, max_new_tokens, max_batch_tokens)
     mode = f"batch{batch_size}" + (f"_tok{max_batch_tokens}" if max_batch_tokens else "")
@@ -186,11 +193,11 @@ def evaluate_mbpp_batched(model, tok, dev, examples: list, tag: str, batch_size:
     with ThreadPoolExecutor(test_workers) as pool:
         for i, j in chunks:
             chunk = order[i:j]
-            prompts = [build_prompt(e) for e in chunk]
+            prompts = [bp(e) for e in chunk]
             t0 = time.time()
-            texts = generate_batch(model, tok, dev, prompts, max_new_tokens)
+            texts = generate_batch(model, tok, dev, prompts, max_new_tokens, stops)
             dt = (time.time() - t0) / len(chunk)
-            results = list(pool.map(lambda a: run_tests(extract_code(a[1]), a[0]), zip(chunk, texts)))
+            results = list(pool.map(lambda a: run_fn(a[0], ex_fn(a[1])), zip(chunk, texts)))
             rows = [{"task_id": e["task_id"], "model": tag, "prompt": p, "generation": t, "passed": ok, "error": err,
                      "gen_seconds": round(dt, 2), "gen_mode": mode}
                     for e, p, t, (ok, err) in zip(chunk, prompts, texts, results)]

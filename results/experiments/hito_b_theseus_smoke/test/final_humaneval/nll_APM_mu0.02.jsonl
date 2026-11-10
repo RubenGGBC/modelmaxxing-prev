@@ -1,0 +1,4 @@
+{"task_id": "HumanEval/0", "nll_sum": 24.20834732055664, "n_tokens": 47}
+{"task_id": "HumanEval/1", "nll_sum": 65.99275970458984, "n_tokens": 78}
+{"task_id": "HumanEval/2", "nll_sum": 15.105512619018555, "n_tokens": 9}
+{"task_id": "HumanEval/3", "nll_sum": 14.397543907165527, "n_tokens": 33}

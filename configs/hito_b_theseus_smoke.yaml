@@ -1,0 +1,29 @@
+# Prueba técnica local del Hito B (sin descargas), con modelos 0.5B ya descargados.
+# A = B = Qwen2.5-0.5B y τ = Coder-0.5B − 0.5B: las rotaciones deben salir ≈ I (salvo direcciones no identificables)
+# y TH debe coincidir con NAIVE. NO mide Theseus. Dev/test MBPP salen de la partición de diagnóstico; HumanEval+
+# usa 4 problemas solo para probar el camino de generación (resultados no usados para ninguna decisión).
+experiment: smoke_hito_b_self_0p5b
+out: results/experiments/hito_b_theseus_smoke
+
+models:
+  base_a:   {repo: Qwen/Qwen2.5-0.5B,       revision: 060db6499f32faf8b98477b0a26969ef7d8b9987, path: models_cache/Qwen2.5-0.5B,       size_gb: 0.99, license: apache-2.0}
+  ft_a:     {repo: Qwen/Qwen2.5-Coder-0.5B, revision: 8123ea2e9354afb7ffcc6c8641d1b2f5ecf18301, path: models_cache/Qwen2.5-Coder-0.5B, size_gb: 0.99, license: apache-2.0}
+  receiver: {repo: Qwen/Qwen2.5-0.5B,       revision: 060db6499f32faf8b98477b0a26969ef7d8b9987, path: models_cache/Qwen2.5-0.5B,       size_gb: 0.99, license: apache-2.0}
+
+resources: {work_disk_gb: 6, disk_margin_gb: 3, min_ram_gb: 8}
+alignment: {split: diagnostic, offset: 0, n: 48, scope: prompt+reference, max_tokens: 512, dtype: float32, rand_seed: 0}
+apm_reference:
+  stats: results/experiments/hito_a_apm_smoke/harness/profile/activation_stats.pt
+  stats_sha256: a8afc00ddcf1299037c9cfe00d877dd21e716de0b7c5f8e00288f06140f397db
+  rand_seed: 0
+dev:  {split: diagnostic, offset: 320, n: 16}
+test:
+  - {split: diagnostic, offset: 352, n: 16}
+  - {split: final_humaneval, offset: 0, n: 4}
+alpha_arms: [TH, THnoQK, NAIVE, RAND]
+alpha_grid: [0.5, 1.0]
+nll_top_k: 1
+fixed_arms: [APM_mu0.02, SHRINK_mu0.02, APMRAND_mu0.02]
+selection_rule: "por brazo, entre los α elegidos por NLL: mayor pass@1 en dev; empate → menor NLL; empate → menor α"
+eval: {dtype: float32, max_new_tokens: 256, batch_size: 8, max_batch_tokens: 16384}
+criterion: "prueba técnica: sin criterio científico"

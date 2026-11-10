@@ -1,0 +1,41 @@
+{
+ "name": "RAND_a0.5",
+ "spec": {
+  "delta_dir": "results/experiments/hito_b_theseus_smoke/deltas/RAND",
+  "scale": 1.0,
+  "alpha": 0.5,
+  "exclude": []
+ },
+ "delta_norm_applied": 177.73274910896308,
+ "delta_tensors_applied": 240,
+ "seconds": {
+  "merge": 3.8,
+  "nll_diagnostic": 0.0,
+  "pass_diagnostic": 25.4
+ },
+ "memory": {
+  "process_max_rss_gb": 3.21,
+  "mps_driver_allocated_gb": 2.68
+ },
+ "dtypes": {
+  "torch.float32": 494032768
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 256,
+  "batch_size": 8,
+  "max_batch_tokens": 16384
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "8ed0ba86d3521be011bcefc8bd641ae869b4da16",
+  "git_dirty": true
+ }
+}

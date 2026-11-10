@@ -1,0 +1,44 @@
+{
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "8ed0ba86d3521be011bcefc8bd641ae869b4da16",
+  "git_dirty": true
+ },
+ "ram_total_gb": 17.2,
+ "disk_free_gb": 12.7,
+ "models": {
+  "base_a": {
+   "path": "models_cache/Qwen2.5-0.5B",
+   "present": true
+  },
+  "ft_a": {
+   "path": "models_cache/Qwen2.5-Coder-0.5B",
+   "present": true
+  },
+  "receiver": {
+   "path": "models_cache/Qwen2.5-0.5B",
+   "present": true
+  }
+ },
+ "problems": [],
+ "warnings": [],
+ "disk_needed_gb": 9.0,
+ "sandbox_ok": true,
+ "partitions": {
+  "diagnostic": {
+   "n": 16,
+   "ids_sha256_16": "045f74e863ceb57c"
+  },
+  "final_humaneval": {
+   "n": 4,
+   "ids_sha256_16": "3ad8f7f54b9bc920"
+  }
+ }
+}

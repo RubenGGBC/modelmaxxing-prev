@@ -1,6 +1,6 @@
 """Descarga checkpoints en revisiones exactas a models_cache/.
 
-Uso:  python scripts/download_models.py [v03|v04|hito_a]   (por defecto v04)
+Uso:  python scripts/download_models.py [v03|v04|hito_a|hito_b]   (por defecto v04)
   v03: par 0.5B del spike (banco de pruebas barato).
   v04: par 1.5B del experimento principal (docs/MODEL_SELECTION.md)."""
 import sys
@@ -23,6 +23,12 @@ SETS = {
     "hito_a": {
         "Qwen2.5-1.5B": ("Qwen/Qwen2.5-1.5B", "8faed761d45a263340a0528343f099c05c9a4323"),
         "Qwen2.5-7B": ("Qwen/Qwen2.5-7B", "d149729398750b98c0af14eb82c78cfe92750796"),
+    },
+    # Hito B (Theseus): ~33,6 GB. Comprobar antes `scripts/hito_b_theseus.py configs/hito_b_theseus.yaml resources`.
+    "hito_b": {
+        "Qwen2.5-1.5B": ("Qwen/Qwen2.5-1.5B", "8faed761d45a263340a0528343f099c05c9a4323"),
+        "Qwen2.5-7B": ("Qwen/Qwen2.5-7B", "d149729398750b98c0af14eb82c78cfe92750796"),
+        "Qwen2.5-Coder-7B": ("Qwen/Qwen2.5-Coder-7B", "0396a76181e127dfc13e5c5ec48a8cee09938b02"),
     },
 }
 which = sys.argv[1] if len(sys.argv) > 1 else "v04"

@@ -1,0 +1,41 @@
+{
+ "name": "APMRAND_mu0.02",
+ "spec": {
+  "delta_dir": "results/experiments/hito_b_theseus_smoke/slices/APMRAND",
+  "scale": 0.98,
+  "alpha": 0.02,
+  "exclude": []
+ },
+ "delta_norm_applied": 17.367726163611323,
+ "delta_tensors_applied": 290,
+ "seconds": {
+  "merge": 3.8,
+  "nll_diagnostic": 0.0,
+  "pass_diagnostic": 24.4
+ },
+ "memory": {
+  "process_max_rss_gb": 3.36,
+  "mps_driver_allocated_gb": 2.68
+ },
+ "dtypes": {
+  "torch.float32": 494032768
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 256,
+  "batch_size": 8,
+  "max_batch_tokens": 16384
+ },
+ "env": {
+  "python": "3.14.7",
+  "torch": "2.15.0",
+  "transformers": "5.22.2",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "device": "mps",
+  "cuda": null,
+  "sandbox": "sandbox-exec",
+  "git_commit": "8ed0ba86d3521be011bcefc8bd641ae869b4da16",
+  "git_dirty": true
+ }
+}

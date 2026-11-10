@@ -14,6 +14,8 @@ import json
 
 MBPP = "google-research-datasets/mbpp"
 SPLITS = ("diagnostic", "selection", "final_mbpp", "final_humaneval")
+# HumanEval/32: la solución canónica falla con el test de la revisión fijada (TypeError en check) → no resoluble.
+HUMANEVAL_EXCLUDED = {"HumanEval/32"}
 
 
 def _full(split: str) -> list[dict]:
@@ -43,8 +45,8 @@ def load_split(name: str) -> list[dict]:
     if name == "final_mbpp":
         return _sanitized_test()[100:]
     if name == "final_humaneval":
-        from datasets import load_dataset
-        return [dict(r, source="humanevalplus") for r in load_dataset("evalplus/humanevalplus", split="test")]
+        from model_maxxing.evaluation.humaneval import load_humanevalplus
+        return [r for r in load_humanevalplus() if r["task_id"] not in HUMANEVAL_EXCLUDED]
     raise ValueError(f"partición desconocida: {name}")
 
 
