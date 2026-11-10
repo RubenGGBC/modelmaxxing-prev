@@ -1,0 +1,13 @@
+{
+ "method": "APM",
+ "donor": "models_cache/Qwen2.5-7B",
+ "selection_digest": "448fdc883c7ace11",
+ "n_params": 1543714304,
+ "dtype": "torch.bfloat16",
+ "sha256": {
+  "model.safetensors": "307c498206bff5a1608fa360652584df63652802c6093c40478e2e674734167a",
+  "config.json": "6d38d2c5165e75fa8c5b0ad288a6ec022081bdd9e3838d07c38327c524e09524",
+  "selection.json": "b12677bea9390c6b824aa101d926ea7690846693c0a1bff27dc423ea7076d473"
+ },
+ "seconds": 27.8
+}

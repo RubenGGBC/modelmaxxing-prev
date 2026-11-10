@@ -2,22 +2,26 @@
 
 **Fecha:** 10-11-2026 · **Máquina:** MacBook con Apple M4 (16 GB unificados) · **Commit de partida:** `dbd633b`
 
-## 0. Resumen y decisión
+## 0. Resumen y decisión (actualizado tras la ejecución en Kaggle)
 
 | Pregunta | Respuesta |
 |---|---|
-| ¿Está APM implementado fielmente? | **Sí**, para Qwen2: perfilado, selección APM, línea base IM y fusión. 8 tests nuevos, incluida la equivalencia exacta del perfilado capa a capa con el forward completo de HF. |
-| ¿Es 7B→1.5B compatible con APM? | **Sí.** Mismas 28 capas y head_dim 128; el donante es mayor en todas las dimensiones. Hay dos diferencias, tratadas en el código: el vocabulario (152 064 frente a 151 936) y los embeddings (lm_head propio en el 7B, atados en el 1.5B). |
-| ¿Cabe en este hardware? | **Cómputo y RAM: sí**, porque el 7B se procesa capa a capa (≈0,5 GB por capa). **Disco: no.** Hacen falta ≈29,8 GB libres y hay entre 9 y 13 GB. |
-| ¿Funciona el circuito completo? | **Sí**, con pesos reales de 0.5B: perfil → slice → fusión → pass@1 en sandbox → congelación de μ → test → informe. |
-| ¿Se ejecutó el experimento R / IM / APM con 7B→1.5B? | **No.** Ni el 7B (15,23 GB) ni el 1.5B (3,09 GB) están descargados, y no caben. No se lanzó ninguna descarga. |
-| ¿Mejora APM al receptor? | **Sin evidencia.** No hay ningún resultado de 1.5B en este hito. |
+| ¿Está APM implementado fielmente? | **Sí**, para Qwen2: perfilado, selección APM, línea base IM y fusión. Tests incluidos (equivalencia exacta del perfilado capa a capa con el forward de HF). |
+| ¿Es 7B→1.5B compatible con APM? | **Sí.** Mismas 28 capas y head_dim 128. Diferencias tratadas: vocabulario (152 064 frente a 151 936) y embeddings (lm_head propio en el 7B, atados en el 1.5B). |
+| ¿Es viable en nuestro hardware? | **En el Mac, no por disco** (hacen falta ~30 GB). **En Kaggle T4 x2, sí:** ~70 min en total (perfil 148 s, slices ~30 s, 9 variantes de dev, 3 de test). Pico de VRAM 7,5 GB y RAM < 8 GB. |
+| ¿Se ejecutó el experimento R / IM / APM? | **Sí** (commit `d22dc9e`). μ congelado en dev antes del test (lock 15:10:36, primer test 15:13:40). |
+| ¿Mejora APM la métrica primaria (pass@1)? | **No de forma demostrable.** Test (157): R 54,1 %, IM 55,4 %, APM 56,0 %. APM − R = **+1,9 pp, IC95 [−2,5; +7,0]**. **No cumple el criterio pre-registrado** (+3 pp con IC95 > 0). |
+| ¿Hay algún efecto? | **Sí, pequeño, en NLL de código, y replicado en dev y test:** APM < IM < R. En test, APM − R = −0,0070 nats/token, IC95 [−0,0101; −0,0040], y APM − IM = −0,0037, IC95 [−0,0058; −0,0017]. |
 
-### Decisión: **GO técnico, condicionado a disco**. No hay ningún GO científico.
+### Decisión: **PIVOT**. APM es técnicamente viable, pero su efecto es demasiado pequeño para ser el motor de transferencia.
 
-- **Por qué no es STOP:** la implementación funciona, el par es compatible y la máquina tiene cómputo y RAM suficientes. El coste estimado (§7) es asumible: unos minutos de perfilado y entre 3 y 7 h de evaluación.
-- **Por qué no es PIVOT:** nada de lo observado obliga a cambiar el método ni el par. El único bloqueo es de espacio en disco.
-- **Condición para ejecutar:** **≥ 30 GB libres** en este Mac, o ejecutar en otra máquina (el PC con RTX 3060 Ti o Kaggle) con la misma configuración. La fase `resources` lo comprueba y falla de forma controlada si no se cumple. **La ejecución en Kaggle está preparada (§7.1).**
+- **No es GO científico:** pass@1 no supera el criterio pre-registrado. La estimación puntual (+1,9 pp frente a R, +0,6 pp frente a IM) apunta en la dirección del paper y tiene un tamaño parecido (en MBPP+ el paper da +1,6 pp sobre IM), pero está dentro del ruido.
+- **No es STOP:** hay una señal real y consistente en NLL. **A igual μ**, APM mejora a IM en todos los μ de dev y en test (el 62-75 % de los problemas). Como con el mismo μ los dos encogen igual al receptor, la diferencia APM − IM se debe a **qué** se inyecta: la selección guiada aporta algo frente a la fija.
+- **Qué hacer:**
+  1. Mantener APM como **línea base** de transferencia.
+  2. Antes de atribuir el efecto al 7B, añadir dos controles baratos y exploratorios: **solo encoger**, θ = (1−μ)·θ_s, sin donante; y **RAND** (slice aleatorio).
+  3. Pasar a **Theseus** (Hito B), que ataca la falta de alineamiento de coordenadas.
+- **Datos:** `results/experiments/hito_a_apm/`. Detalle en §10.
 
 ---
 
@@ -148,7 +152,7 @@ Donante Qwen2.5-Coder-0.5B → receptor Qwen2.5-0.5B, 16 problemas de dev y 16 d
 - Coste: fusión de 1-6 s; generación + tests ≈ 1,2-1,6 s/problema (0.5B, FP32, lotes de 8, 256 tokens); memoria MPS 2,7 GB.
 - Las cifras de pass@1 (n = 16; p. ej. R 7/16 frente a fusión 4/16 en dev) **no miden APM** y no deben citarse como resultado.
 
-## 7. Experimento comparativo: no ejecutado
+## 7. Experimento comparativo: no ejecutable en el Mac (ejecutado después en Kaggle, ver §10)
 
 **Motivo:** no cabe en disco (29,8 GB necesarios, 8,8-13,4 GB libres). `scripts/hito_a_apm.py configs/hito_a_apm.yaml resources` lo detecta y sale con código 2. **No se lanzó ninguna descarga.**
 
@@ -229,3 +233,53 @@ Qué hace, en orden: tests → `resources` (se detiene si no hay disco, RAM o sa
 
 - Nuevos: `notebooks/kaggle_hito_a_apm.ipynb`, `src/model_maxxing/transfer/apm.py`, `src/model_maxxing/transfer/apm_profile.py`, `scripts/hito_a_apm.py`, `tests/test_apm.py`, `configs/hito_a_apm*.yaml`, `configs/arch/*.config.json`, `results/experiments/hito_a_apm_smoke/`.
 - Modificados: `tests/test_sandbox_subprocess.py` y `evaluation/runner.py` (guarda de Linux), `scripts/download_models.py` (conjunto `hito_a`), `.gitignore`.
+
+## 10. Resultados del experimento 7B → 1.5B (Kaggle, T4 x2)
+
+**Ejecución:** commit `d22dc9e`, Python 3.13.16, torch 2.11.0+cu130, transformers 5.22.2, 2× Tesla T4, sandbox `subprocess(rlimits)`. Perfil del 7B: sha256 `42d627519fec29dc`, 148 s. Slices: IM `da6849946d1702ed`, APM `307c498206bff5a1` (bf16, 1 543 714 304 parámetros). Congelación de μ: sha256 `84d916abb535dfb3`. Fuera de un primer intento fallido por falta de memoria (§7.1), no hubo reintentos.
+
+**NLL de cada slice por sí solo** (sonda de 64 ej.): R 0,918 · IM 13,48 · APM 21,24 (uniforme 11,93). Ningún slice funciona como modelo; el efecto viene de la mezcla con μ pequeño.
+
+### 10.1 Desarrollo (333 problemas): elección de μ
+
+| Variante | pass@1 | Δ frente a R (IC95) | +/− | NLL | Δ NLL frente a R (IC95) |
+|---|---:|---|---:|---:|---|
+| R | 146 (43,8 %) | — | — | 0,9605 | — |
+| IM μ=0,01 | 146 (43,8 %) | +0,0 [−2,1; +2,1] | +6/−6 | 0,9555 | −0,0050 [−0,0079; −0,0036] |
+| IM μ=0,02 | 144 (43,2 %) | −0,6 [−3,3; +2,1] | +9/−11 | 0,9536 | −0,0069 [−0,0113; −0,0045] |
+| IM μ=0,05 | 143 (42,9 %) | −0,9 [−4,2; +2,4] | +14/−17 | 0,9691 | +0,0086 [+0,0026; +0,0164] |
+| IM μ=0,10 | 104 (31,2 %) | **−12,6 [−17,7; −7,5]** | +19/−61 | 1,1123 | +0,1518 |
+| APM μ=0,01 | 145 (43,5 %) | −0,3 [−2,1; +1,5] | +5/−6 | 0,9520 | −0,0085 [−0,0131; −0,0066] |
+| **APM μ=0,02** | **148 (44,4 %)** | +0,6 [−1,5; +2,7] | +8/−6 | **0,9464** | **−0,0141 [−0,0220; −0,0105]** |
+| APM μ=0,05 | 141 (42,3 %) | −1,5 [−5,1; +2,1] | +16/−21 | 0,9508 | −0,0097 [−0,0196; −0,0023] |
+| APM μ=0,10 | 94 (28,2 %) | **−15,6 [−20,7; −10,8]** | +14/−66 | 1,0888 | +0,1283 |
+
+*Δ en puntos porcentuales; +/− = problemas que pasan de fallo a acierto / de acierto a fallo frente a R; NLL de código en nats/token.*
+
+- **μ congelado:** IM 0,01 y APM 0,02, aplicando la regla pre-registrada.
+- **pass@1 es plano hasta μ = 0,05 y se hunde con μ = 0,10:** −13 a −16 pp, con 24-30 errores de sintaxis frente a 1 en R.
+- **APM tiene menor NLL que IM con el mismo μ en todos los casos:** −0,0035, −0,0071, −0,0183 y −0,0235, todos con IC95 < 0.
+
+### 10.2 Test sellado (157 problemas, MBPP sanitized `test[100:]`)
+
+| Variante | pass@1 | NLL |
+|---|---:|---:|
+| R | 85/157 (54,1 %) | 0,7341 |
+| IM μ=0,01 | 87/157 (55,4 %) | 0,7309 |
+| APM μ=0,02 | 88/157 (56,0 %) | 0,7272 |
+
+| Comparación | Δ pass@1 (IC95) | +/− | Δ NLL (IC95) | Problemas con menor NLL |
+|---|---|---:|---|---:|
+| IM − R | +1,3 pp [−1,9; +5,1] | +5/−3 | −0,0032 [−0,0048; −0,0017] | 65 % |
+| APM − R | +1,9 pp [−2,5; +7,0] | +9/−6 | −0,0070 [−0,0101; −0,0040] | 66 % |
+| APM − IM | +0,6 pp [−3,2; +4,5] | +5/−4 | −0,0037 [−0,0058; −0,0017] | 62 % |
+
+**Criterio pre-registrado** (+3 pp frente a R y frente a IM, con IC95 > 0): **no se cumple.** El resultado en pass@1 es **no concluyente**.
+
+### 10.3 Lectura
+
+1. **El efecto existe pero es pequeño.** APM baja la NLL de código del receptor un ~1 % (0,007 nats/token), y lo hace de forma consistente en dev y test. No se traduce en una mejora demostrable de pass@1 con 157 problemas.
+2. **La selección guiada importa algo.** Con el mismo μ, el encogimiento del receptor es idéntico en IM y APM, así que la ventaja de APM en NLL viene del contenido inyectado y no del simple factor (1−μ).
+3. **No sabemos aún si el efecto viene del 7B o de encoger el receptor.** IM también baja la NLL frente a R a μ pequeño. Falta separar tres fuentes: encoger (1−μ)θ_s, inyectar algo cualquiera (RAND), e inyectar el 7B. Son controles exploratorios y ya no pre-registrados para este test.
+4. **El margen útil de μ es estrecho:** a partir de 0,05 empeora y con 0,10 rompe el modelo. Es coherente con unos slices que, por sí solos, son peores que el azar.
+5. **Coste:** perfil + slices ≈ 3 min; cada variante en T4 ≈ 10 s de fusión + 30-90 s de NLL + 2-13 min de generación. El modelo final es un 1.5B normal: no necesita el donante en inferencia.

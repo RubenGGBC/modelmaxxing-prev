@@ -1,0 +1,54 @@
+{
+ "env": {
+  "python": "3.13.16",
+  "torch": "2.11.0+cu130",
+  "transformers": "5.22.2",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "device": "cuda",
+  "cuda": "Tesla T4",
+  "sandbox": "subprocess(rlimits, unshare_net=False)",
+  "git_commit": "d22dc9e76c67d020f26749b060929b7cf3dad2d8",
+  "git_dirty": true
+ },
+ "ram_total_gb": 33.7,
+ "ram_available_gb": 31.6,
+ "disk_free_gb": 1019.4,
+ "models": {
+  "donor": {
+   "path": "models_cache/Qwen2.5-7B",
+   "present": true,
+   "expected_gb": 15.23
+  },
+  "receiver": {
+   "path": "models_cache/Qwen2.5-1.5B",
+   "present": true,
+   "expected_gb": 3.09
+  }
+ },
+ "problems": [],
+ "disk_needed_gb": 11.5,
+ "sandbox_ok": true,
+ "partitions": {
+  "calibration": {
+   "split": "diagnostic",
+   "n": 128,
+   "ids_sha256_16": "8d1e3a4917a54126"
+  },
+  "probe": {
+   "split": "diagnostic",
+   "n": 64,
+   "ids_sha256_16": "e06c7bacb21dc9ec"
+  },
+  "dev": {
+   "split": "selection",
+   "n": 333,
+   "ids_sha256_16": "0d2e406f0d4ba0c8"
+  },
+  "test": {
+   "split": "final_mbpp",
+   "n": 157,
+   "ids_sha256_16": "af71c4994f4bd364"
+  }
+ }
+}

@@ -1,0 +1,189 @@
+{
+ "dev": {
+  "n": 333,
+  "arms": {
+   "APM_mu0.01": {
+    "passed": 145,
+    "n": 333,
+    "pass_at_1": 0.4354,
+    "nll_code": 0.95199,
+    "syntax_errors": 1,
+    "timeouts": 1
+   },
+   "APM_mu0.02": {
+    "passed": 148,
+    "n": 333,
+    "pass_at_1": 0.4444,
+    "nll_code": 0.94643,
+    "syntax_errors": 2,
+    "timeouts": 0
+   },
+   "APM_mu0.05": {
+    "passed": 141,
+    "n": 333,
+    "pass_at_1": 0.4234,
+    "nll_code": 0.95082,
+    "syntax_errors": 8,
+    "timeouts": 0
+   },
+   "APM_mu0.1": {
+    "passed": 94,
+    "n": 333,
+    "pass_at_1": 0.2823,
+    "nll_code": 1.08876,
+    "syntax_errors": 24,
+    "timeouts": 0
+   },
+   "IM_mu0.01": {
+    "passed": 146,
+    "n": 333,
+    "pass_at_1": 0.4384,
+    "nll_code": 0.95548,
+    "syntax_errors": 4,
+    "timeouts": 1
+   },
+   "IM_mu0.02": {
+    "passed": 144,
+    "n": 333,
+    "pass_at_1": 0.4324,
+    "nll_code": 0.95355,
+    "syntax_errors": 4,
+    "timeouts": 1
+   },
+   "IM_mu0.05": {
+    "passed": 143,
+    "n": 333,
+    "pass_at_1": 0.4294,
+    "nll_code": 0.96912,
+    "syntax_errors": 3,
+    "timeouts": 1
+   },
+   "IM_mu0.1": {
+    "passed": 104,
+    "n": 333,
+    "pass_at_1": 0.3123,
+    "nll_code": 1.11231,
+    "syntax_errors": 30,
+    "timeouts": 1
+   },
+   "R": {
+    "passed": 146,
+    "n": 333,
+    "pass_at_1": 0.4384,
+    "nll_code": 0.96048,
+    "syntax_errors": 1,
+    "timeouts": 1
+   }
+  },
+  "paired_bootstrap": {
+   "APM_mu0.01 vs R": {
+    "diff": -0.003003003003003003,
+    "ci_low": -0.021096096096095432,
+    "ci_high": 0.015015015015015015,
+    "wrong_to_right": 5,
+    "right_to_wrong": 6
+   },
+   "APM_mu0.02 vs R": {
+    "diff": 0.006006006006006006,
+    "ci_low": -0.015015015015015015,
+    "ci_high": 0.02702702702702703,
+    "wrong_to_right": 8,
+    "right_to_wrong": 6
+   },
+   "APM_mu0.05 vs R": {
+    "diff": -0.015015015015015015,
+    "ci_low": -0.05105105105105105,
+    "ci_high": 0.021021021021021023,
+    "wrong_to_right": 16,
+    "right_to_wrong": 21
+   },
+   "APM_mu0.1 vs R": {
+    "diff": -0.15615615615615616,
+    "ci_low": -0.2072072072072072,
+    "ci_high": -0.10810810810810811,
+    "wrong_to_right": 14,
+    "right_to_wrong": 66
+   },
+   "IM_mu0.01 vs R": {
+    "diff": 0.0,
+    "ci_low": -0.021021021021021023,
+    "ci_high": 0.021021021021021023,
+    "wrong_to_right": 6,
+    "right_to_wrong": 6
+   },
+   "IM_mu0.02 vs R": {
+    "diff": -0.006006006006006006,
+    "ci_low": -0.03303303303303303,
+    "ci_high": 0.021021021021021023,
+    "wrong_to_right": 9,
+    "right_to_wrong": 11
+   },
+   "IM_mu0.05 vs R": {
+    "diff": -0.009009009009009009,
+    "ci_low": -0.042042042042042045,
+    "ci_high": 0.024024024024024024,
+    "wrong_to_right": 14,
+    "right_to_wrong": 17
+   },
+   "IM_mu0.1 vs R": {
+    "diff": -0.12612612612612611,
+    "ci_low": -0.17717717717717718,
+    "ci_high": -0.07507507507507508,
+    "wrong_to_right": 19,
+    "right_to_wrong": 61
+   }
+  }
+ },
+ "test": {
+  "n": 157,
+  "arms": {
+   "APM_mu0.02": {
+    "passed": 88,
+    "n": 157,
+    "pass_at_1": 0.5605,
+    "nll_code": 0.72717,
+    "syntax_errors": 2,
+    "timeouts": 0
+   },
+   "IM_mu0.01": {
+    "passed": 87,
+    "n": 157,
+    "pass_at_1": 0.5541,
+    "nll_code": 0.73089,
+    "syntax_errors": 0,
+    "timeouts": 0
+   },
+   "R": {
+    "passed": 85,
+    "n": 157,
+    "pass_at_1": 0.5414,
+    "nll_code": 0.73413,
+    "syntax_errors": 0,
+    "timeouts": 0
+   }
+  },
+  "paired_bootstrap": {
+   "APM_mu0.02 vs R": {
+    "diff": 0.01910828025477707,
+    "ci_low": -0.025477707006369428,
+    "ci_high": 0.07006369426751592,
+    "wrong_to_right": 9,
+    "right_to_wrong": 6
+   },
+   "IM_mu0.01 vs R": {
+    "diff": 0.012738853503184714,
+    "ci_low": -0.01910828025477707,
+    "ci_high": 0.050955414012738856,
+    "wrong_to_right": 5,
+    "right_to_wrong": 3
+   },
+   "APM_mu0.02 vs IM_mu0.01": {
+    "diff": 0.006369426751592357,
+    "ci_low": -0.03184713375796178,
+    "ci_high": 0.044585987261146494,
+    "wrong_to_right": 5,
+    "right_to_wrong": 4
+   }
+  }
+ }
+}

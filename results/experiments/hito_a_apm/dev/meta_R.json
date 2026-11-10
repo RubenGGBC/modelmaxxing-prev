@@ -1,0 +1,45 @@
+{
+ "name": "R",
+ "method": "R",
+ "mu": 0.0,
+ "recipe": {
+  "receiver": "models_cache/Qwen2.5-1.5B",
+  "transfer": "identity",
+  "alpha": 0.0,
+  "donor": null,
+  "base": null,
+  "patched_tensors": []
+ },
+ "slice_sha256": null,
+ "applied_patch_norm_after_transfer": 0.0,
+ "seconds": {
+  "merge": 10.0,
+  "nll": 75.1,
+  "pass": 451.8
+ },
+ "memory": {
+  "process_max_rss_gb": 4.09,
+  "cuda_peak_allocated_gb": 7.54
+ },
+ "dtypes": {
+  "torch.float32": 1543714304
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 512,
+  "batch_size": 16,
+  "max_batch_tokens": 16384
+ },
+ "env": {
+  "python": "3.13.16",
+  "torch": "2.11.0+cu130",
+  "transformers": "5.22.2",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "device": "cuda",
+  "cuda": "Tesla T4",
+  "sandbox": "subprocess(rlimits, unshare_net=False)",
+  "git_commit": "d22dc9e76c67d020f26749b060929b7cf3dad2d8",
+  "git_dirty": true
+ }
+}

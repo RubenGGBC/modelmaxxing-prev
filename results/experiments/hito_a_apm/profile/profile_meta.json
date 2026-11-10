@@ -1,0 +1,72 @@
+{
+ "stats_sha256": "42d627519fec29dcba5a971f6a9c56ebcdc442552bf17152e239c72f692088b7",
+ "cost": {
+  "layer_seconds": [
+   5.27,
+   4.732,
+   4.662,
+   4.642,
+   4.707,
+   4.685,
+   4.789,
+   4.743,
+   4.758,
+   4.818,
+   6.775,
+   5.632,
+   4.987,
+   5.027,
+   5.944,
+   6.678,
+   6.236,
+   5.134,
+   5.182,
+   5.16,
+   5.106,
+   5.16,
+   5.219,
+   5.634,
+   5.377,
+   5.347,
+   5.225,
+   5.183
+  ],
+  "n_examples": 128,
+  "tokens_profiled": 15602,
+  "tokens_total": 15602,
+  "dtype": "torch.float32",
+  "device": "cuda",
+  "total_seconds": 148.24,
+  "memory": {
+   "process_max_rss_gb": 14.27,
+   "cuda_peak_allocated_gb": 1.22
+  }
+ },
+ "calibration": {
+  "split": "diagnostic",
+  "offset": 0,
+  "n": 128,
+  "scope": "prompt",
+  "max_tokens": 512,
+  "ids_sha256_16": "8d1e3a4917a54126"
+ },
+ "donor": {
+  "repo": "Qwen/Qwen2.5-7B",
+  "revision": "d149729398750b98c0af14eb82c78cfe92750796",
+  "license": "apache-2.0",
+  "path": "models_cache/Qwen2.5-7B",
+  "size_gb": 15.23
+ },
+ "env": {
+  "python": "3.13.16",
+  "torch": "2.11.0+cu130",
+  "transformers": "5.22.2",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "device": "cuda",
+  "cuda": "Tesla T4",
+  "sandbox": "subprocess(rlimits, unshare_net=False)",
+  "git_commit": "d22dc9e76c67d020f26749b060929b7cf3dad2d8",
+  "git_dirty": true
+ }
+}

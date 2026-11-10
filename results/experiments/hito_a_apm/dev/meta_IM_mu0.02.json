@@ -1,0 +1,45 @@
+{
+ "name": "IM_mu0.02",
+ "method": "IM",
+ "mu": 0.02,
+ "recipe": {
+  "receiver": "models_cache/Qwen2.5-1.5B",
+  "transfer": "interpolate",
+  "alpha": 0.02,
+  "donor": "results/experiments/hito_a_apm/slices/IM",
+  "base": null,
+  "patched_tensors": []
+ },
+ "slice_sha256": "da6849946d1702ed2aeb560a26736e15e0382a0b86cd1b43316967116ace0c58",
+ "applied_patch_norm_after_transfer": 0.0,
+ "seconds": {
+  "merge": 28.6,
+  "nll": 79.0,
+  "pass": 508.0
+ },
+ "memory": {
+  "process_max_rss_gb": 7.83,
+  "cuda_peak_allocated_gb": 7.54
+ },
+ "dtypes": {
+  "torch.float32": 1543714304
+ },
+ "eval": {
+  "dtype": "float32",
+  "max_new_tokens": 512,
+  "batch_size": 16,
+  "max_batch_tokens": 16384
+ },
+ "env": {
+  "python": "3.13.16",
+  "torch": "2.11.0+cu130",
+  "transformers": "5.22.2",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "device": "cuda",
+  "cuda": "Tesla T4",
+  "sandbox": "subprocess(rlimits, unshare_net=False)",
+  "git_commit": "d22dc9e76c67d020f26749b060929b7cf3dad2d8",
+  "git_dirty": true
+ }
+}

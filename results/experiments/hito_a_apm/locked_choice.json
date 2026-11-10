@@ -1,0 +1,107 @@
+{
+ "rule": "por método, μ con mayor pass@1 en dev; empate → menor NLL de código en dev; empate → menor μ",
+ "chosen_mu": {
+  "IM": 0.01,
+  "APM": 0.02
+ },
+ "dev_n": 333,
+ "dev_summary": {
+  "APM_mu0.01": {
+   "passed": 145,
+   "n": 333,
+   "pass_at_1": 0.4354,
+   "nll_code": 0.95199,
+   "syntax_errors": 1,
+   "timeouts": 1
+  },
+  "APM_mu0.02": {
+   "passed": 148,
+   "n": 333,
+   "pass_at_1": 0.4444,
+   "nll_code": 0.94643,
+   "syntax_errors": 2,
+   "timeouts": 0
+  },
+  "APM_mu0.05": {
+   "passed": 141,
+   "n": 333,
+   "pass_at_1": 0.4234,
+   "nll_code": 0.95082,
+   "syntax_errors": 8,
+   "timeouts": 0
+  },
+  "APM_mu0.1": {
+   "passed": 94,
+   "n": 333,
+   "pass_at_1": 0.2823,
+   "nll_code": 1.08876,
+   "syntax_errors": 24,
+   "timeouts": 0
+  },
+  "IM_mu0.01": {
+   "passed": 146,
+   "n": 333,
+   "pass_at_1": 0.4384,
+   "nll_code": 0.95548,
+   "syntax_errors": 4,
+   "timeouts": 1
+  },
+  "IM_mu0.02": {
+   "passed": 144,
+   "n": 333,
+   "pass_at_1": 0.4324,
+   "nll_code": 0.95355,
+   "syntax_errors": 4,
+   "timeouts": 1
+  },
+  "IM_mu0.05": {
+   "passed": 143,
+   "n": 333,
+   "pass_at_1": 0.4294,
+   "nll_code": 0.96912,
+   "syntax_errors": 3,
+   "timeouts": 1
+  },
+  "IM_mu0.1": {
+   "passed": 104,
+   "n": 333,
+   "pass_at_1": 0.3123,
+   "nll_code": 1.11231,
+   "syntax_errors": 30,
+   "timeouts": 1
+  },
+  "R": {
+   "passed": 146,
+   "n": 333,
+   "pass_at_1": 0.4384,
+   "nll_code": 0.96048,
+   "syntax_errors": 1,
+   "timeouts": 1
+  }
+ },
+ "slices": {
+  "IM": {
+   "model.safetensors": "da6849946d1702ed2aeb560a26736e15e0382a0b86cd1b43316967116ace0c58",
+   "config.json": "6d38d2c5165e75fa8c5b0ad288a6ec022081bdd9e3838d07c38327c524e09524",
+   "selection.json": "787f9a640381b5a5c4a26d75295b1e57704d110d799abaa66ea6a3b6155ee82b"
+  },
+  "APM": {
+   "model.safetensors": "307c498206bff5a1608fa360652584df63652802c6093c40478e2e674734167a",
+   "config.json": "6d38d2c5165e75fa8c5b0ad288a6ec022081bdd9e3838d07c38327c524e09524",
+   "selection.json": "b12677bea9390c6b824aa101d926ea7690846693c0a1bff27dc423ea7076d473"
+  }
+ },
+ "config_sha256": "cff5e5a2320513c1aef3b62ad70c534227ad9e073490e19a16a2c8cf3b2676a6",
+ "env": {
+  "python": "3.13.16",
+  "torch": "2.11.0+cu130",
+  "transformers": "5.22.2",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "device": "cuda",
+  "cuda": "Tesla T4",
+  "sandbox": "subprocess(rlimits, unshare_net=False)",
+  "git_commit": "d22dc9e76c67d020f26749b060929b7cf3dad2d8",
+  "git_dirty": true
+ }
+}

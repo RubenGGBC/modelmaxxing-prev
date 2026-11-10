@@ -1,0 +1,23 @@
+{
+ "probe": {
+  "split": "diagnostic",
+  "offset": 256,
+  "n": 64,
+  "ids_sha256_16": "e06c7bacb21dc9ec"
+ },
+ "results": {
+  "R": {
+   "nll_per_token": 0.9179,
+   "tokens": 3313
+  },
+  "IM": {
+   "nll_per_token": 13.4848,
+   "tokens": 3313
+  },
+  "APM": {
+   "nll_per_token": 21.2409,
+   "tokens": 3313
+  }
+ },
+ "note": "slice solo (μ=1): diagnóstico, no es un brazo"
+}
