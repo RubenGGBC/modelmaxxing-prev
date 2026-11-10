@@ -1,6 +1,8 @@
 # Hito A — APM Qwen2.5-7B → Qwen2.5-1.5B. PRE-REGISTRO: no cambiar tras ejecutar `dev`.
 # Cambios ANTES de cualquier ejecución real (2026-11-10, preparación de Kaggle): profile_dtype bf16→fp32,
 # batch_size 8→16, min_ram_gb 16→12. Ninguno depende de resultados.
+# 2026-11-10, tras un OOM en Kaggle durante `dev` (sin resultados consultados; se perdieron con la VM):
+# max_batch_tokens=16384. Solo cambia cómo se agrupan los lotes, no qué se evalúa.
 # Uso: PYTHONPATH=src python scripts/hito_a_apm.py configs/hito_a_apm.yaml <fase>
 experiment: hito_a_apm_7b_to_1p5b
 out: results/experiments/hito_a_apm
@@ -37,6 +39,7 @@ eval:
   dtype: float32           # la fusión con μ≈0,01 es menor que el paso de redondeo de bf16 (2^-8): se evalúa en FP32
   max_new_tokens: 512
   batch_size: 16           # GPU de 16 GB: 6,2 GB de pesos FP32 + caché KV ≈1 GB
+  max_batch_tokens: 16384  # B·(L_max+512) ≤ 16384: un prompt de dev tiene 3703 tokens (OOM en T4 con lotes de 16)
 
 # Efecto mínimo de interés (fijado antes de ver resultados): +3 pp de pass@1 en test frente a R y frente a IM,
 # con el IC95 % del bootstrap pareado por encima de 0. Por debajo, el resultado se informa como no concluyente.

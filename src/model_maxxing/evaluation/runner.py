@@ -156,23 +156,43 @@ def generate_batch(model, tok, dev, prompts: list[str], max_new_tokens: int = 25
     return [tok.decode(o[n:], skip_special_tokens=True) for o in out]
 
 
+def token_budget_chunks(lengths: list[int], batch_size: int, max_new_tokens: int,
+                        max_batch_tokens: int | None) -> list[tuple[int, int]]:
+    """Corta una lista YA ORDENADA por longitud en lotes [i, j) con como mucho `batch_size` ejemplos y, si hay
+    presupuesto, B·(L_max + max_new_tokens) ≤ max_batch_tokens (el relleno a la izquierda iguala todos a L_max).
+    Un ejemplo que por sí solo excede el presupuesto va en un lote de 1. Determinista."""
+    out, i = [], 0
+    while i < len(lengths):
+        j = i + 1
+        while j < len(lengths) and j - i < batch_size and (
+                max_batch_tokens is None or (j - i + 1) * (max(lengths[i:j + 1]) + max_new_tokens) <= max_batch_tokens):
+            j += 1
+        out.append((i, j))
+        i = j
+    return out
+
+
 def evaluate_mbpp_batched(model, tok, dev, examples: list, tag: str, batch_size: int = 16, max_new_tokens: int = 256,
-                          on_rows=None, test_workers: int = 4) -> list[dict]:
+                          on_rows=None, test_workers: int = 4, max_batch_tokens: int | None = None) -> list[dict]:
     """Genera por lotes (ordenados por longitud de prompt, determinista) y ejecuta los tests en paralelo.
+    `max_batch_tokens` limita B·(L_max + max_new_tokens) para no agotar la memoria con prompts muy largos.
     `on_rows(rows)` se llama tras cada lote para guardar de forma reanudable."""
     from concurrent.futures import ThreadPoolExecutor
-    order = sorted(examples, key=lambda e: (len(tok(build_prompt(e)).input_ids), e["task_id"]))
+    keyed = sorted(((len(tok(build_prompt(e)).input_ids), e["task_id"], e) for e in examples), key=lambda x: x[:2])
+    order = [e for _, _, e in keyed]
+    chunks = token_budget_chunks([n for n, _, _ in keyed], batch_size, max_new_tokens, max_batch_tokens)
+    mode = f"batch{batch_size}" + (f"_tok{max_batch_tokens}" if max_batch_tokens else "")
     all_rows = []
     with ThreadPoolExecutor(test_workers) as pool:
-        for i in range(0, len(order), batch_size):
-            chunk = order[i:i + batch_size]
+        for i, j in chunks:
+            chunk = order[i:j]
             prompts = [build_prompt(e) for e in chunk]
             t0 = time.time()
             texts = generate_batch(model, tok, dev, prompts, max_new_tokens)
             dt = (time.time() - t0) / len(chunk)
             results = list(pool.map(lambda a: run_tests(extract_code(a[1]), a[0]), zip(chunk, texts)))
             rows = [{"task_id": e["task_id"], "model": tag, "prompt": p, "generation": t, "passed": ok, "error": err,
-                     "gen_seconds": round(dt, 2), "gen_mode": f"batch{batch_size}"}
+                     "gen_seconds": round(dt, 2), "gen_mode": mode}
                     for e, p, t, (ok, err) in zip(chunk, prompts, texts, results)]
             if on_rows:
                 on_rows(rows)

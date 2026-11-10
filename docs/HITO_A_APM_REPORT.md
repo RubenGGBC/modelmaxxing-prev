@@ -195,6 +195,10 @@ Qué hace, en orden: tests → `resources` (se detiene si no hay disco, RAM o sa
 | `batch_size` | 8 | 16 | GPU de 16 GB |
 | `min_ram_gb` | 16 | 12 | Pico real estimado: ~5 GB |
 
+**Primera ejecución en Kaggle (T4 x2, commit `45cd00f`): falló por falta de memoria en `dev`.** `resources`, la descarga (81 s), `profile` (145 s, 1,27 GB de pico en GPU), `slice` y `slice_nll` terminaron bien. La memoria se agotó en las dos GPUs a los ~10 min de `dev`. Causa: un problema de dev tiene un prompt de 3703 tokens (mediana 93) y, al agrupar por longitud, el último lote de 16 se rellenó a ~59 000 tokens en FP32. **Solución:** `max_batch_tokens: 16384`, que limita B·(L_max + 512) y deja ese prompt en un lote de 1. Los resultados parciales se perdieron con la VM y no se consultaron. El notebook ahora guarda parciales y logs si falla, y muestra el progreso cada 5 min.
+
+**Diagnóstico de esa ejecución (NLL de cada slice por sí solo, sonda de 64 ej.):** R 0,918 · IM 13,48 · **APM 21,24** (uniforme 11,93). A diferencia de la prueba con 0.5B, el slice APM queda peor que el IM y peor que el azar: predice con confianza y mal. Hipótesis sin verificar: (a) APM elige canales con activaciones gigantes; (b) el embedding de entrada del 7B (que tiene lm_head propio) hace de salida en el 1.5B, que tiene embeddings atados. No es un brazo, pero aumenta el riesgo de que la fusión no mejore a R.
+
 **Pendiente de verificar en la propia ejecución:** el disco libre real de Kaggle en `/tmp` (las fuentes no coinciden). La fase `resources` lo mide antes de descargar.
 
 ## 8. Recomendaciones para el siguiente paso

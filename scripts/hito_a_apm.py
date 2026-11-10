@@ -310,7 +310,8 @@ def evaluate_stage(cfg: dict, out: Path, stage: str, limit: int | None, only: li
         t2 = time.time()
         if todo_p:
             evaluate_mbpp_batched(model, tok, dev, todo_p, tag=name, batch_size=E["batch_size"],
-                                  max_new_tokens=E["max_new_tokens"], on_rows=save)
+                                  max_new_tokens=E["max_new_tokens"], on_rows=save,
+                                  max_batch_tokens=E.get("max_batch_tokens"))
         meta = {"name": name, "method": method, "mu": mu, "recipe": rec.describe(),
                 "slice_sha256": (json.loads((Path(slice_dir) / "manifest.json").read_text())["sha256"]["model.safetensors"]
                                  if slice_dir else None), **info,
